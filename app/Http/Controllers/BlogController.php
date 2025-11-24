@@ -42,14 +42,16 @@ class BlogController extends Controller
         $input = $request->except('image');
 
         $input['short_description'] = $request->shortdescription;
-
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
+       $image = $request->file('image');
+       $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+    
+       // نقل الصورة للمجلد العام
+       $image->move(public_path('images'), $imageName);
 
-            $input['image'] = asset('images/' . $imageName);
-        }
+       // الحصول على الرابط الكامل مع http/https
+       $input['image'] = url('/images/' . $imageName);
+       }
 
         Blog::create($input);
 
@@ -85,18 +87,22 @@ class BlogController extends Controller
         $blog = Blog::find($id);
 
         if ($request->hasFile('image')) {
-            // حذف الصورة القديمة إن وجدت
-            if ($blog->image && file_exists(public_path('images/' . basename($blog->image)))) {
-                unlink(public_path('images/' . basename($blog->image)));
-            }
-
-            // تحميل الصورة الجديدة
-            $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-
-            $blog->image = asset('images/' . $imageName);
+          // حذف الصورة القديمة إن وجدت
+       if ($blog->image) {
+        $oldImagePath = public_path('images/' . basename($blog->image));
+        if (file_exists($oldImagePath)) {
+            unlink($oldImagePath);
         }
+         }
+
+          // تحميل الصورة الجديدة
+          $image = $request->file('image');
+          $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+          $image->move(public_path('images'), $imageName);
+
+          // استخدام url() بدلاً من asset() للحصول على رابط كامل مع http
+           $blog->image = url('images/' . $imageName);
+}
         $blog->update($request->except('image'));
         return redirect()->route('blog.index')->with('success', 'Blog updated successfully.');
 

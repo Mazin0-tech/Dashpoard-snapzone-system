@@ -13,15 +13,22 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('logo')->nullable();
-            $table->text('about')->nullable();
-            $table->string('face')->nullable();
+            $table->string('site_name');
+            $table->string('favicon');
+            $table->string('logo');
             $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->string('watsapp')->nullable();
-            $table->string('linkedin')->nullable();
-            $table->string('youtube')->nullable();
+            $table->string('email')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
             $table->string('instagram')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('snapchat')->nullable();
+            $table->string('tiktok')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('title');
+            $table->string('address');
+            $table->string('keywords');
+            $table->string('meta');
             $table->timestamps();
         });
     }

@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Team extends Model
+class Partner extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'name',
-        'jobtitle',
-        'linkedin',
-        'image',
-      
+        'logo',
+        'title'
     ];
 }

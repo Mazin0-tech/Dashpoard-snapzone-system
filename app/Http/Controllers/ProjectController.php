@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Http\Controllers\Controller;
+use App\Models\Gallery;
 use App\Models\Service;
 use Illuminate\Http\Request;
-
-use function Laravel\Prompts\error;
 
 class ProjectController extends Controller
 {
@@ -16,9 +14,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-     $projects =Project::with('services')->get();
-        return view('admin.Projects.index',compact('projects'));
-       
+        $projects = Project::with('service', 'galleries')->latest()->get();
+        return view('admin.Projects.index', compact('projects'));
     }
 
     /**
@@ -27,8 +24,7 @@ class ProjectController extends Controller
     public function create()
     {
         $services = Service::all();
-
-        return view('admin.Projects.create',compact('services'));
+        return view('admin.Projects.create', compact('services'));
     }
 
     /**
@@ -45,164 +41,208 @@ class ProjectController extends Controller
             'service_id' => 'required|exists:services,id',
             'client' => 'nullable|string|max:255',
             'link_project' => 'nullable|url|max:255',
-            'gallery' => 'nullable|array', 
+            'slider_type' => 'nullable|boolean',
+            'gallery' => 'nullable|array',
+            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'featured_image_index' => 'nullable|integer|min:0'
         ]);
- 
 
-        $input = $request->except('image', 'gallery');
+        $input = $request->except('image', 'gallery', 'featured_image_index');
 
+        // Handle main image
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            $input['image'] = asset('images/' . $imageName);
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/projects'), $imageName);
+            $input['image'] = url('images/projects/' . $imageName);
         }
-        
 
-        // Handle gallery
-        if ($request->has('gallery')) {
-            $gallery = $request->file('gallery');
-            $galleryPaths = [];
+        // Create project
+        $project = Project::create($input);
 
-            foreach ($gallery as $file) {
-                $galleryName = uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('gallery'), $galleryName);
-                $galleryPaths[] = asset('gallery/' . $galleryName);
+        // Handle gallery images
+        if ($request->hasFile('gallery')) {
+            $order = 1;
+            $featuredIndex = $request->featured_image_index ?? 0;
+            
+            foreach ($request->file('gallery') as $index => $file) {
+                $galleryName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/gallery'), $galleryName);
+                
+                Gallery::create([
+                    'project_id' => $project->id,
+                    'image' => url('images/gallery/' . $galleryName),
+                    'order' => $order,
+                    'is_featured' => ($index == $featuredIndex)
+                ]);
+                
+                $order++;
             }
-
-            $input['gallery'] = json_encode($galleryPaths);
         }
 
-        Project::create($input);
-
- 
-        return redirect()->route('project.index')->with('message', 'Redirect Done!');
+        return redirect()->route('project.index')->with('success', 'Project created successfully.');
     }
-    
 
-
-
-
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit($id)
     {
-        $project = Project::find($id);
+        $project = Project::with(['galleries' => function($query) {
+            $query->orderBy('order', 'asc');
+        }])->findOrFail($id);
+        
         $services = Service::all();
 
-     
-
-        return view('admin.Projects.edit',compact('project', 'services'));
-        
+        return view('admin.Projects.edit', compact('project', 'services'));
     }
 
-
-
-    // public function update(Request $request, $id)
-    // {
-
-
-    //     $request->validate([
-    //         'title' => 'required|string|max:255|unique:projects,title,' . $id,
-    //         'description' => 'required|string',
-    //         'industry' => 'nullable|string|max:255',
-    //         'date' => 'required|date',
-    //         'service_id' => 'required|exists:services,id', 
-    //         'client' => 'nullable|string|max:255',
-    //         'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-    //         'link_project' => 'nullable|url|max:255',
-    //         'gallery' => 'nullable|array',
-    //     ]);
-
-    //     $project = Project::find($id);
-
-    //     if (!$project) {
-    //         return redirect()->back()->with('error', 'Project not found');
-    //     }
-
-    //     if ($request->hasFile('image')) {
-    //         if ($project->image && file_exists(public_path('uploads/projects/' . basename($project->image)))) {
-    //             unlink(public_path('uploads/projects/' . basename($project->image)));
-    //         }
-
-    //         $image = $request->file('image');
-    //         $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-    //         $image->move(public_path('uploads/projects'), $imageName);
-
-    //         $project->image = 'uploads/projects/' . $imageName;
-    //     }
-
-
-    //     if ($request->has('gallery')) {
-    //         $project->gallery = $request->gallery; // تأكد إن الجاليري يتم التعامل معه بشكل مناسب حسب نوع البيانات في الـ DB
-    //     }
-
-    //     $project->update($request->except('image'));
-
-    //     // إعادة التوجيه إلى صفحة المشاريع مع رسالة نجاح
-    //     return redirect()->route('project.index')->with('success', 'Project updated successfully.');
-    // }
-
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'title' => 'nullable|string|max:255|unique:projects,title,' . $id,
-               'description' => 'nullable|string',
-               'industry' => 'nullable|string|max:255',
-               'date' => 'nullable|date',
-               'service_id' => 'nullable|exists:services,id', 
-               'client' => 'nullable|string|max:255',
-               'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-               'link_project' => 'nullable|url|max:255',
-            'gallery.*' => 'image|max:5048', // تحقق من كل صورة في الجاليري لو هي مرفوعة
+            'title' => 'required|string|max:255|unique:projects,title,' . $id,
+            'description' => 'required|string',
+            'industry' => 'nullable|string|max:255',
+            'date' => 'required|date',
+            'service_id' => 'required|exists:services,id',
+            'client' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'link_project' => 'nullable|url|max:255',
+            'slider_type' => 'nullable|boolean',
+            'gallery' => 'nullable|array',
+            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'featured_image_index' => 'nullable|integer|min:0'
         ]);
 
-        $project = Project::find($id);
+        $project = Project::findOrFail($id);
 
-        if (!$project) {
-            return redirect()->back()->with('error', 'Project not found');
-        }
-
+        // Handle main image update
         if ($request->hasFile('image')) {
-            if ($project->image && file_exists(public_path($project->image))) {
-                unlink(public_path($project->image));
+            // Delete old image if exists
+            if ($project->image) {
+                $oldImagePath = public_path('images/projects/' . basename($project->image));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
 
+            // Upload new image
             $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/projects'), $imageName);
-
-            $project->image = 'uploads/projects/' . $imageName;
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/projects'), $imageName);
+            $project->image = url('images/projects/' . $imageName);
         }
 
-        // تعديل الجزء الخاص بالgallery
+        // Handle gallery images update
         if ($request->hasFile('gallery')) {
-            $images = [];
-            foreach ($request->file('gallery') as $image) {
-                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/projects/gallery'), $imageName);
-                $images[] = 'uploads/projects/gallery/' . $imageName;
+            $existingGalleriesCount = $project->galleries()->count();
+            $order = $existingGalleriesCount + 1;
+            $featuredIndex = $request->featured_image_index ?? 0;
+            
+            foreach ($request->file('gallery') as $index => $file) {
+                $galleryName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('images/gallery'), $galleryName);
+                
+                Gallery::create([
+                    'project_id' => $project->id,
+                    'image' => url('images/gallery/' . $galleryName),
+                    'order' => $order,
+                    'is_featured' => ($index == $featuredIndex)
+                ]);
+                
+                $order++;
             }
-            $project->gallery = json_encode($images);
-        } elseif ($request->has('gallery') && is_array($request->gallery)) {
-            $project->gallery = json_encode($request->gallery);
         }
 
-        $project->update($request->except('image', 'gallery'));
+        // Update other fields
+        $project->update($request->except('image', 'gallery', 'featured_image_index'));
 
         return redirect()->route('project.index')->with('success', 'Project updated successfully.');
     }
 
-
-
-
-
-    public function destroy(Project $project)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($id)
     {
-        if ($project->image && file_exists(public_path('images/' . basename($project->image)))) {
-            unlink(public_path('images/' . basename($project->image)));
+        $project = Project::findOrFail($id);
+
+        // Delete main image
+        if ($project->image) {
+            $imagePath = public_path('images/projects/' . basename($project->image));
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        // Delete gallery images
+        foreach ($project->galleries as $gallery) {
+            if ($gallery->image) {
+                $galleryPath = public_path('images/gallery/' . basename($gallery->image));
+                if (file_exists($galleryPath)) {
+                    unlink($galleryPath);
+                }
+            }
+            $gallery->delete();
         }
 
         $project->delete();
 
         return redirect()->route('project.index')->with('success', 'Project deleted successfully.');
+    }
+
+    /**
+     * Delete a gallery image
+     */
+    public function deleteGallery($id)
+    {
+        $gallery = Gallery::findOrFail($id);
+        
+        // Delete image file
+        if ($gallery->image) {
+            $imagePath = public_path('images/gallery/' . basename($gallery->image));
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+        
+        $gallery->delete();
+        
+        return response()->json(['success' => 'Gallery image deleted successfully.']);
+    }
+
+    /**
+     * Update gallery order
+     */
+    public function updateGalleryOrder(Request $request)
+    {
+        $request->validate([
+            'gallery_order' => 'required|array'
+        ]);
+
+        foreach ($request->gallery_order as $order => $galleryId) {
+            Gallery::where('id', $galleryId)->update(['order' => $order + 1]);
+        }
+
+        return response()->json(['success' => 'Gallery order updated successfully.']);
+    }
+
+    /**
+     * Toggle featured image
+     */
+    public function toggleFeatured($id)
+    {
+        $gallery = Gallery::findOrFail($id);
+        
+        // Reset all featured images for this project
+        Gallery::where('project_id', $gallery->project_id)->update(['is_featured' => false]);
+        
+        // Set this image as featured
+        $gallery->update(['is_featured' => true]);
+        
+        return response()->json(['success' => 'Featured image updated successfully.']);
     }
 }

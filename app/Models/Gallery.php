@@ -5,15 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class sliderproject extends Model
+class Gallery extends Model
 {
     use HasFactory;
+
     protected $fillable = [
-        'title',
+        'project_id',
         'image',
-        'project_id'
+        'order',
+        'is_featured'
     ];
 
+    protected $casts = [
+        'is_featured' => 'boolean'
+    ];
 
     public function project()
     {

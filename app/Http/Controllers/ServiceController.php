@@ -3,16 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
-
     public function index()
     {
-        $services = Service::all();
+        $services = Service::with('projects')->latest()->get();
         return view('admin.Services.index', compact('services'));
     }
 
@@ -26,39 +23,27 @@ class ServiceController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'shortdescription' => 'nullable|string|max:500',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'industry' => 'required|string|max:255',
-            'shortdescription' => 'nullable|string|max:255', 
+            'start_date' => 'nullable',
+            'end_date' => 'nullable',
         ]);
 
-        $input = $request->except('image', 'gallery');
+        $input = $request->except('image');
 
+        // Handle main image
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images'), $imageName);
-            $input['image'] = asset('images/' . $imageName);
-        }
-
-
-        // Handle gallery
-        if ($request->has('gallery')) {
-            $gallery = $request->file('gallery');
-            $galleryPaths = [];
-
-            foreach ($gallery as $file) {
-                $galleryName = uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('gallery'), $galleryName);
-                $galleryPaths[] = asset('gallery/' . $galleryName);
-            }
-
-            $input['gallery'] = json_encode($galleryPaths);
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/services'), $imageName);
+            $input['image'] = url('images/services/' . $imageName);
         }
 
         // Create the service
         Service::create($input);
 
-        return redirect()->route('service.index')->with('success', 'Service created successfully');
+        return redirect()->route('service.index')->with('success', 'Service created successfully.');
     }
 
     public function edit($id)
@@ -69,55 +54,73 @@ class ServiceController extends Controller
 
     public function update(Request $request, $id)
     {
-        // التحقق من المدخلات
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'shortdescription' => 'nullable|string|max:500',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'industry' => 'required|string|max:255',
-            'shortdescription' => 'nullable|string|max:255', // إضافة التحقق لحقل shortdescription
+            'start_date' => 'nullable',
+            'end_date' => 'nullable',
         ]);
 
-        // العثور على الخدمة بناءً على الـ ID
         $service = Service::findOrFail($id);
 
-        // // إذا كان هناك صورة جديدة مرفقة
-        // if ($request->hasFile('image')) {
-        //     $imagePath = $request->file('image')->store('services', 'public');
-        // }
+        // Handle image update
         if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($service->image) {
+                $oldImagePath = public_path('images/services/' . basename($service->image));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            // Upload new image
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $imageName);
-            $service->image = 'images/' . $imageName;
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/services'), $imageName);
+            $service->image = url('images/services/' . $imageName);
         }
 
-
-        // تحديث السجل
+        // Update service
         $service->update([
             'title' => $request->title,
             'description' => $request->description,
-            'image' => $imagePath ?? $service->image, // إذا لم تكن هناك صورة جديدة، نحتفظ بالصورة الحالية
+            'shortdescription' => $request->shortdescription,
             'industry' => $request->industry,
-            'shortdescription' => $request->shortdescription, // حفظ shortdescription
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'image' => $service->image, // Use the updated image or keep the existing one
         ]);
 
-        return redirect()->route('service.index')->with('success', 'Service updated successfully');
+        return redirect()->route('service.index')->with('success', 'Service updated successfully.');
     }
 
     public function destroy($id)
     {
-        // العثور على الخدمة بناءً على الـ ID
         $service = Service::findOrFail($id);
 
-        // إذا كان هناك صورة، قم بحذفها من التخزين
+        // Delete image file if exists
         if ($service->image) {
-            Storage::disk('public')->delete($service->image);
+            $imagePath = public_path('images/services/' . basename($service->image));
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
         }
 
-        // حذف الخدمة من قاعدة البيانات
+        // Delete the service
         $service->delete();
 
-        return redirect()->route('service.index')->with('success', 'Service deleted successfully');
+        return redirect()->route('service.index')->with('success', 'Service deleted successfully.');
+    }
+
+    /**
+     * Show the specified service
+     */
+    public function show($id)
+    {
+        $service = Service::with('projects', 'faqs')->findOrFail($id);
+        return view('admin.Services.show', compact('service'));
     }
 }

@@ -8,24 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class Service extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'title',
         'shortdescription',
         'description',
+        'start_date',
+        'end_date',
         'image',
-        'industry',
+        'industry'
     ];
 
 
-
-
-    public function project()
+    public function projects()
     {
         return $this->hasMany(Project::class);
     }
 
-    public function sliders()
+    public function faqs()
     {
-        return $this->hasMany(Sliderservices::class, 'service_id');
+        return $this->hasMany(Faq::class);
     }
 }

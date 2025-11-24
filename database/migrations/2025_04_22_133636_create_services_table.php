@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('shortdescription');
             $table->longText('description');
+            $table->string('start_date')->nullable();
+            $table->string('end_date')->nullable();
             $table->string('image')->default('https://static.thenounproject.com/png/1077596-200.png');
             $table->string('industry');
 

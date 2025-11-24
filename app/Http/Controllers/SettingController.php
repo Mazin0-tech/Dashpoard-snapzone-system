@@ -3,91 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\Setting;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
-    public function index()
-    {
-        $settings = Setting::all();
-        return view('admin.Sttings.index', compact('settings'));
-    }
-
-    public function create() {
-        return view('admin.Sttings.create');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'logo' => 'nullable|string',
-            'about' => 'nullable|string',
-            'face' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'address' => 'nullable|string',
-            'watsapp' => 'nullable|string',
-            'linkedin' => 'nullable|url|max:255',
-            'youtube' => 'nullable|url|max:255',
-            'instagram' => 'nullable|url|max:255',
-
-        ]);
-
-        Setting::create($request->all());
-
-        return redirect()->route('settings.index');
-     
-    }
-
-
-
 
     public function edit($id)
     {
-        $settings = Setting::findOrFail($id);
-        return view('admin.Sttings.edit', compact('settings'));
+        $setting = Setting::findOrFail($id);
+        return view('admin.Settings.edit', compact('setting'));
     }
-
-
-
 
     public function update(Request $request, $id)
     {
-         $request->validate([
-            'logo' => 'nullable|string',
-            'about' => 'nullable|string',
-            'face' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'address' => 'nullable|string',
-            'watsapp' => 'nullable|string',
-            'linkedin' => 'nullable|url|max:255',
-            'youtube' => 'nullable|url|max:255',
+        $request->validate([
+            'site_name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'meta' => 'required|string|max:500',
+            'keywords' => 'required|string|max:500',
+            'address' => 'required|string|max:500',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'facebook' => 'nullable|url|max:255',
+            'twitter' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
-
+            'youtube' => 'nullable|url|max:255',
+            'snapchat' => 'nullable|url|max:255',
+            'tiktok' => 'nullable|url|max:255',
+            'linkedin' => 'nullable|url|max:255',
+            'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,ico|max:1024',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
-        $settings = Setting::find($id);
+        $setting = Setting::findOrFail($id);
+        $input = $request->except(['favicon', 'logo']);
 
-        $settings->update($request->all());
+        // Handle favicon upload
+        if ($request->hasFile('favicon')) {
+            // Delete old favicon if exists
+            if ($setting->favicon) {
+                $oldFaviconPath = public_path('images/settings/' . basename($setting->favicon));
+                if (file_exists($oldFaviconPath)) {
+                    unlink($oldFaviconPath);
+                }
+            }
 
-        return redirect()->route('settings.index')->with('success', 'Settings updated successfully.');
+            $favicon = $request->file('favicon');
+            $faviconName = 'favicon_' . uniqid() . '.' . $favicon->getClientOriginalExtension();
+            $favicon->move(public_path('images/settings'), $faviconName);
+            $input['favicon'] = url('images/settings/' . $faviconName);
+        }
 
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            // Delete old logo if exists
+            if ($setting->logo) {
+                $oldLogoPath = public_path('images/settings/' . basename($setting->logo));
+                if (file_exists($oldLogoPath)) {
+                    unlink($oldLogoPath);
+                }
+            }
+
+            $logo = $request->file('logo');
+            $logoName = 'logo_' . uniqid() . '.' . $logo->getClientOriginalExtension();
+            $logo->move(public_path('images/settings'), $logoName);
+            $input['logo'] = url('images/settings/' . $logoName);
+        }
+
+        $setting->update($input);
+
+        return redirect()->route('settings.index')
+            ->with('success', 'Settings updated successfully.');
     }
 
-    public function destroy($id)
-    {
-        // العثور على الخدمة بناءً على الـ ID
-        $service = Setting::findOrFail($id);
-
-      
-
-        // حذف الخدمة من قاعدة البيانات
-        $service->delete();
-
-        return redirect()->route('settings.index')->with('success', 'Service deleted successfully');
-    }
-
-
-
-    
 }
