@@ -579,7 +579,7 @@
                     {{-- Start::header-element --}}
                     <div class="header-element header-fullscreen">
                         {{-- Start::header-link --}}
-                        <a onclick="openFullscreen();" href="#" class="header-link">
+                        <a href="javascript:void(0);" class="header-link" id="fullscreen-toggle">
                             <i class="bx bx-fullscreen full-screen-open header-link-icon"></i>
                             <i class="bx bx-exit-fullscreen full-screen-close header-link-icon d-none"></i>
                         </a>
@@ -996,8 +996,7 @@
                         {{ $settings->site_name ?? 'Default Site Name' }}
                     </a>.
                     Designed with <span class="bi bi-heart-fill text-danger"></span> by
-                    <a href="{{ url('/') }}" target="_blank"
-                        class="fw-semibold text-primary text-decoration-underline">
+                    <a href="{{ url('/') }}" target="_blank" class="fw-semibold text-primary text-decoration-underline">
                         {{ $settings->site_name ?? 'Default Site Name' }}
                     </a>. All rights reserved.
                 </span>
@@ -1047,7 +1046,35 @@
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <script>
+        document.getElementById('fullscreen-toggle').addEventListener('click', function() {
+    if (!document.fullscreenElement) {
+        // دخول للشاشة الكاملة
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen();
+        }
+    } else {
+        // خروج من الشاشة الكاملة
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+    });
 
+      // تحديث الأيقونات
+    document.addEventListener('fullscreenchange', function() {
+    const openIcon = document.querySelector('.full-screen-open');
+    const closeIcon = document.querySelector('.full-screen-close');
+    
+    if (document.fullscreenElement) {
+        openIcon.classList.add('d-none');
+        closeIcon.classList.remove('d-none');
+    } else {
+        openIcon.classList.remove('d-none');
+        closeIcon.classList.add('d-none');
+    }
+    Animation});
+    </script>
 
     {{-- JSVector Maps JS --}}
     <script src="{{asset('assets/libs/jsvectormap/js/jsvectormap.min.js')}}"></script>

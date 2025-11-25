@@ -86,7 +86,7 @@
             <div class="ms-md-1 ms-0">
                 <nav>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Projects</li>
                     </ol>
                 </nav>

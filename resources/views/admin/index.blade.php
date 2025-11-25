@@ -1,13 +1,18 @@
 @extends('layouts.admin')
 
 @section('content')
+@push('css')
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+@endpush
 <div class="main-content app-content">
     <div class="container-fluid">
 
         <!-- Start::page-header -->
         <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
             <div>
-                <p class="fw-semibold fs-18 mb-0">Welcome back, {{ $user->name }}!</p>
+                <p class="fw-semibold fs-18 mb-0">Welcome back, {{ Auth::user()->name }}!</p>
                 <span class="fs-semibold text-muted">Track your activity and manage your content here.</span>
             </div>
             <div class="d-flex align-items-center">
@@ -285,7 +290,7 @@
                                 @forelse($projects->take(5) as $project)
                                 <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
                                     <div class="avatar avatar-sm me-3">
-                                        <img src="{{ asset('storage/' . $project->image) }}" alt="{{ $project->title }}"
+                                        <img src="{{ asset($project->image) }}" alt="{{ $project->title }}"
                                             class="rounded"
                                             onerror="this.src='https://via.placeholder.com/40x40?text=P'">
                                     </div>
@@ -319,7 +324,7 @@
                                 @forelse($blogs->take(5) as $blog)
                                 <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
                                     <div class="avatar avatar-sm me-3">
-                                        <img src="{{ asset('storage/' . $blog->image) }}" alt="{{ $blog->title }}"
+                                        <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}"
                                             class="rounded"
                                             onerror="this.src='https://via.placeholder.com/40x40?text=B'">
                                     </div>
@@ -349,8 +354,8 @@
                     <div class="col-xl-6 col-lg-12">
                         <div class="card custom-card">
                             <div class="card-header">
-                                <h5 class="card-title">Projects by Industry</h5>
-                                <span class="text-muted">Distribution of projects across different industries</span>
+                                <h5 class="card-title">Projects by Service</h5>
+                                <span class="text-muted">Distribution of projects across different services</span>
                             </div>
                             <div class="card-body">
                                 <canvas id="projectsChart" height="300"></canvas>
@@ -461,10 +466,10 @@
     var projectsChart = new Chart(projectsCtx, {
         type: 'bar',
         data: {
-            labels: {!! json_encode($projects->groupBy('industry')->keys()) !!},
+            labels: {!! json_encode($projects->groupBy('services')->keys()) !!},
             datasets: [{
                 label: 'Projects Count',
-                data: {!! json_encode($projects->groupBy('industry')->map->count()) !!},
+                data: {!! json_encode($projects->groupBy('services')->map->count()) !!},
                 backgroundColor: [
                     '#007bff', '#28a745', '#ffc107', '#dc3545', 
                     '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'
