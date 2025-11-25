@@ -2,6 +2,12 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Front\AboutuiController;
+use App\Http\Controllers\Front\BloguiController;
+use App\Http\Controllers\Front\ContactuiController;
+use App\Http\Controllers\Front\HomeController;
+use App\Http\Controllers\Front\ProjectuiController;
+use App\Http\Controllers\Front\ServiceuiController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingController;
@@ -17,18 +23,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-
-   Route::get('/', function () {
-        return view('welcome');
-    });
-
-
-
+    Route::get('/', [HomeController::class , 'index' ])->name('home');
 
 
 Auth::routes();
-Route::middleware('auth')->group(function(){
-    Route::get('/admin', function () {
+Route::middleware('auth')->prefix('admin')->group(function(){
+    Route::get('/', function () {
         $user = Auth::user();
         $partners = Partner::all();
         $services = Service::all();
@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function(){
     Route::resource('project', ProjectController::class);
     Route::resource('blog', BlogController::class);
     Route::resource('contact', ContactController::class);
-    Route::resource('contact', ContactController::class)->except(['show']);
+
     Route::resource('settings', SettingController::class);
     Route::resource('about', AboutController::class);
     Route::resource('partners', PartnerController::class);
@@ -55,4 +55,8 @@ Route::middleware('auth')->group(function(){
 
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::resource('service', ServiceuiController::class, ['names' => 'servicefront']);
+    Route::resource('project', ProjectuiController::class, ['names' => 'projectfront']);
+    Route::resource('blog', BloguiController::class, ['names' => 'blogfront']);
+    Route::resource('contact', ContactuiController::class, ['names' => 'contactfront']);
+    Route::resource('about', AboutuiController::class, ['names' => 'aboutfront']);

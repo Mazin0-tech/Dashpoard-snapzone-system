@@ -1,109 +1,334 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Meta Tags -->
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="author" content="{{ $settings->site_name }}" />
+    <meta name="description" content="{{ $settings->meta }}" />
+    <meta name="keywords" content="{{ $settings->keywords }}" />
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @if($settings && $settings->favicon)
+    <link rel="icon" type="image/x-icon" href="{{ $settings->favicon }}">
+    @else
+    <link rel="icon" href="{{ asset('front/img/logo/favicon.svg') }}" type="image/x-icon">
+    @endif
 
-    <title>Login Dashboard</title>
-    {{--  <!-- إضافة Animate.css من CDN -->  --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Site Title -->
+    <title>{{ $settings->title }}</title>
 
-
-    {{--  <!-- Fonts -->  --}}
-    
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
-    {{--  <!-- Scripts -->  --}}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-<style>
-    /* تحسين شكل الخلفية */
-  .bg-gradient {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-        transform: translateY(-3px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-control:focus {
-        border-color: #007bff;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-        transition: all 0.3s ease;
-    }
-
-</style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('front/fonts/flaticon_cretio.css') }}" />
+    <link rel="stylesheet" href="{{ asset('front/css/plugins/swiper.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('front/css/plugins/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('front/css/style.css') }}" />
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand text-bg-dark" href="{{ url('/') }}">
-                 Dashboard
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+<body class="dark">
+    <!-- Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="txt-loading">
+            <div class="preloader-text">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" class="preloader-text-svg">
+                    <defs>
+                        <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#000" />
+                            <stop offset="50%" stop-color="#000" />
+                            <stop offset="100%" stop-color="#000" />
+                        </linearGradient>
+                    </defs>
+                    <text class="svg-text" id="svgText">cretio</text>
+                </svg>
+            </div>
+            <div class="loading-percent">0%</div>
+        </div>
+    </div>
+    <!-- Preloader -->
 
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
+    <!-- Start Header Section -->
+    <header class="ak-site_header ak-style1 ak-sticky_header">
+        <div class="ak-main_header">
+            <div class="container container-customize">
+                <div class="ak-main_header_in">
+                    <div class="ak-main-header-left">
+                        <a class="ak-site_branding dark-logo" href="index.html">
+                            <img src="{{ asset('front/img/logo/dark-logo.svg') }}" alt="..." />
+                        </a>
+                        <a class="ak-site_branding white-logo" href="index.html">
+                            <img src="{{ asset('front/img/logo/white-logo.svg') }}" alt="..." />
+                        </a>
+                    </div>
+                    <div class="ak-main-header-center">
+                        <div class="ak-nav ak-medium">
+                          <ul class="ak-nav_list">
+                        
+                            <li>
+                                <a href="{{ route('home') }}">Home</a>
                             </li>
-                        @endguest
-                    </ul>
+                        
+                            <li>
+                                <a href="{{ route('servicefront.index') }}">Service</a>
+                            </li>
+                        
+                            <li>
+                                <a href="{{ route('projectfront.index') }}">Projects</a>
+                            </li>
+                        
+                            <li>
+                                <a href="{{ route('blogfront.index') }}">Blog</a>
+                            </li>
+                        
+                            <li>
+                                <a href="{{ route('aboutfront.index') }}">About Us</a>
+                            </li>
+                        
+                            <li>
+                                <a href="{{ route('contactfront.index') }}">Contact</a>
+                            </li>
+                        
+                        </ul>
+                        </div>
+                    </div>
+                    <div class="ak-main-header-right">
+                        <div class="ak-space-between gap-3">
+                            <div class="btn-wrapper">
+                                <div class="button-container">
+                                    <a href="contact.html" class="custom-button ak-center">
+                                        <svg width="180px" height="50px" viewBox="0 0 180 50">
+                                            <rect x="0" y="0" width="180" height="50" rx="30" ry="30" class="bg-line" />
+                                            <rect x="0" y="0" width="180" height="50" rx="30" ry="30" class="hl-line" />
+                                        </svg>
+                                        <span>Start Project</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="offcanvaopen-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
+                                aria-controls="offcanvasRight">
+                                <i class="flaticon-dots-menu"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+        </div>
+        <div class="nav-bar-border"></div>
+    </header>
+    <!-- Start offcanvas body -->
+    <div class="offcanvas offcanvas-end style-1" tabindex="-1" id="offcanvasRight">
+        <div class="offcanvas-header">
+            <button type="button" class="btn-close btn-close-black ms-auto" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="offcanvas-body-coustom-style">
+                <div class="offcanvas-logo-content">
+                    <a class="ak-site_branding dark-logo" href="index.html">
+                        <img src="{{ asset('front/img/logo/dark-logo.svg') }}" alt="..." />
+                    </a>
+                    <a class="ak-site_branding white-logo" href="index.html">
+                        <img src="{{ asset('front/img/logo/white-logo.svg') }}" alt="..." />
+                    </a>
+                </div>
+                <p class="desp">
+                    We thrive on creativity and innovation. Our team is constantly
+                    exploring new.
+                </p>
+                <div class="row row-cols-3 g-3">
+                    <div class="col">
+                        <img src="{{ asset('front/img/gallery/mini-gallery-1.png') }}" class="img-fluid" alt="..." />
+                    </div>
+                    <div class="col">
+                        <img src="{{ asset('front/img/gallery/mini-gallery-2.png') }}" class="img-fluid" alt="..." />
+                    </div>
+                    <div class="col">
+                        <img src="{{ asset('front/img/gallery/mini-gallery-3.png') }}" class="img-fluid" alt="..." />
+                    </div>
+                    <div class="col">
+                        <img src="{{ asset('front/img/gallery/mini-gallery-4.png') }}" class="img-fluid" alt="..." />
+                    </div>
+                    <div class="col">
+                        <img src="{{ asset('front/img/gallery/mini-gallery-5.png') }}" class="img-fluid" alt="..." />
+                    </div>
+                    <div class="col">
+                        <img src="{{ asset('front/img/gallery/mini-gallery-6.png') }}" class="img-fluid" alt="..." />
+                    </div>
+                </div>
+                <div class="offcanvas-footer-contant">
+                    <p class="short-title">Say hello!</p>
+                    <a class="email" href="emailto:info@email.com"> info@email.com </a>
+                    <a class="email" href="telto:(406)555-0120">(406) 555-0120</a>
+                    <a href="#">
+                        901 N Pitt Str., Suite 170 <br />
+                        Alexandria, USA
+                    </a>
+                    <div class="ak-height-25 ak-height-lg-25"></div>
+                    <p class="short-title">Social:</p>
+                    <div class="social-icon">
+                        <a href="#" class="icon style-2 dark-mode">
+                            <i class="flaticon-facebook"></i>
+                        </a>
+                        <a href="#" class="icon style-2 dark-mode">
+                            <i class="flaticon-video"></i>
+                        </a>
+                        <a href="#" class="icon style-2 dark-mode">
+                            <i class="flaticon-linkedin"></i>
+                        </a>
+                        <a href="#" class="icon style-2 dark-mode">
+                            <i class="flaticon-twitter"></i>
+                        </a>
+                    </div>
+                    <div class="ak-height-40 ak-height-lg-40"></div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <!-- End offcanvas body -->
+    <div class="ak-height-190 ak-height-lg-80"></div>
+    <!-- End Header Section -->
+
+
+    @yield('content')
+
+    <!-- Start Footer -->
+    <div class="ak-height-150 ak-height-lg-80"></div>
+    <footer class="ak-footer style-1 ak-bg" data-src="{{ asset('front/img/bg/footer-bg.png') }}">
+        <div class="ak-height-120 ak-height-lg-50"></div>
+        <img src="{{ asset('front/img/bg/footer-bgshape.png') }}" class="ak-bg footer-bgshape" alt="bgshape" />
+        <div class="container">
+            <div class="ak-footer-container">
+                <div class="footer-cta">
+                    <div class="footer-cta-info">
+                        <h1 class="footer-cta-title">Let's</h1>
+                        <h2 class="footer-cta-title-two"><span>work</span> Together</h2>
+                    </div>
+                    <div class="footer-btn-email">
+                        <div class="footer-btn-content">
+                            <a href="contact.html" class="footer-btn circle-btn-anim">
+                                <span class="text">
+                                    Start
+                                    <i class="flaticon-up-right-arrow"></i>
+                                    <span>Project</span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="footer-email">
+                            <p class="email-short-title">Say hello!</p>
+                            <a href="emailto:info@email.com"> info@email.com</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-content">
+                    <div class="about-company">
+                        <img class="footer-logo" src="{{ asset('front/img/logo/footer-logo.svg') }}"
+                            alt="white-logo.svg" />
+                        <p class="about-company-desp">
+                            We thrive on creativity and <span>innovation</span>. Our team is
+                            constantly exploring new ideas and approaches to ensure your
+                            <span>digital presence </span> is fresh.
+                        </p>
+                    </div>
+
+                    <div class="address-phn">
+                        <a href="telto:(406)555-0120" class="phn">
+                            <span>
+                                <i class="flaticon-telephone"></i>
+                            </span>
+                            (406) 555-012
+                        </a>
+                        <p class="address">901 N Pitt Str., Suite 170 Alexandria, USA</p>
+                    </div>
+
+                    <div class="footer-list-content">
+                        <ul class="footer-list-menu">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="services.html">Services</a></li>
+                            <li><a href="portfolio.html">Portfolio</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ak-height-95 ak-height-lg-50"></div>
+        <div class="copy-right-content">
+            <div class="container">
+                <div class="ak-space-between">
+                    <div class="social-icon">
+                        <a href="#" class="icon">
+                            <i class="flaticon-facebook"></i>
+                        </a>
+                        <a href="#" class="icon">
+                            <i class="flaticon-video"></i>
+                        </a>
+                        <a href="#" class="icon">
+                            <i class="flaticon-linkedin"></i>
+                        </a>
+                    </div>
+                    <a href="#" class="copy-right-text">© 2025 <span>Thememarch.</span> All rights
+                        reserved.</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- End Footer -->
+
+    <div class="mode-toggle">
+        <div class="setting-mode">
+            <button id="open">
+                <i class="flaticon-sun"></i>
+            </button>
+            <button id="clecel">
+                <i class="flaticon-close-button-1"></i>
+            </button>
+        </div>
+        <div class="mode-btn js-mode-type">
+            <button data-mode="light" class="mode-light">
+                <i class="flaticon-sun"></i>
+            </button>
+            <button data-mode="dark" class="active mode-dark">
+                <i class="flaticon-night-mode"></i>
+            </button>
+        </div>
+    </div>
+
+    <span class="ak-scrollup">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 10L1.7625 11.7625L8.75 4.7875V20H11.25V4.7875L18.225 11.775L20 10L10 0L0 10Z"
+                fill="currentColor" />
+        </svg>
+    </span>
+    <!-- Start Video Popup -->
+    <div class="ak-video-popup">
+        <div class="ak-video-popup-overlay"></div>
+        <div class="ak-video-popup-content">
+            <div class="ak-video-popup-layer"></div>
+            <div class="ak-video-popup-container">
+                <div class="ak-video-popup-align">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="about:blank"></iframe>
+                    </div>
+                </div>
+                <div class="ak-video-popup-close"></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Video Popup -->
+
+    <!-- Script -->
+    <script src="{{ asset('front/js/plugins/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('front/js/plugins/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('front/js/plugins/swiper.min.js') }}"></script>
+
+    <script src="{{ asset('front/js/plugins/gsap.js') }}"></script>
+    <script src="{{ asset('front/js/plugins/splittext.js') }}"></script>
+    <script src="{{ asset('front/js/plugins/scrolltigger.js') }}"></script>
+    <script src="{{ asset('front/js/plugins/scrolltoplugins.js') }}"></script>
+    <script src="{{ asset('front/js/plugins/lenis.min.js') }}"></script>
+
+    <script src="{{ asset('front/js/main.js') }}"></script>
 </body>
+
 </html>

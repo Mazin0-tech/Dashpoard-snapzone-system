@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
+
+        public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -34,8 +39,8 @@ class BlogController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255|unique:services,title',
-            'description' => 'required|string|max:255',
-            'shortdescription' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'shortdescription' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
@@ -80,33 +85,35 @@ class BlogController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'shortdescription' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'short_description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
         $blog = Blog::find($id);
 
-        if ($request->hasFile('image')) {
-          // حذف الصورة القديمة إن وجدت
-       if ($blog->image) {
-        $oldImagePath = public_path('images/' . basename($blog->image));
-        if (file_exists($oldImagePath)) {
+         $data = $request->except([
+          'image'
+          ]);
+
+              // لو فيه صورة جديدة
+         if ($request->hasFile('image')) {
+         if ($blog->image) {
+          $oldImagePath = public_path('images/' . basename($blog->image));
+         if (file_exists($oldImagePath)) {
             unlink($oldImagePath);
         }
-         }
+    }
 
-          // تحميل الصورة الجديدة
-          $image = $request->file('image');
-          $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-          $image->move(public_path('images'), $imageName);
+        $image = $request->file('image');
+        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images'), $imageName);
 
-          // استخدام url() بدلاً من asset() للحصول على رابط كامل مع http
-           $blog->image = url('images/' . $imageName);
-}
-        $blog->update($request->except('image'));
-        return redirect()->route('blog.index')->with('success', 'Blog updated successfully.');
+        $data['image'] = url('images/' . $imageName);
+        }
 
+        $blog->update($data);
 
+            return redirect()->route('blog.index')->with('success', 'Blog updated successfully.');
     }
 
     /**

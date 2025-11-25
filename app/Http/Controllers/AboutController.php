@@ -11,6 +11,11 @@ class AboutController extends Controller
      * Display a listing of the resource.
      */
 
+        public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

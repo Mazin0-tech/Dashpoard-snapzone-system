@@ -2,8 +2,8 @@
 @section('content')
 
 @push('css')
-    <!-- Summernote CSS via CDN -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css" rel="stylesheet">
+<!-- Summernote CSS via CDN -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css" rel="stylesheet">
 @endpush
 
 
@@ -34,53 +34,38 @@
 
                      <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $blog->title) }}" required>
+                        <input type="text" class="form-control" id="title" name="title"
+                           value="{{ old('title', $blog->title) }}" required>
                         @error('title')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                      </div>
 
-                     {{--  <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="description" name="description" value="{{ old('description', $blog->description) }}" required>
+
+                     <div class="form-group h-25">
+                        <label for="description">Description</label>
+                        <textarea name="description"
+                           id="summernote">{{ old('description',$blog->description) }}</textarea>
                         @error('description')
-                        <div class="text-danger">{{ $message }}</div>
+                        <p class="text-danger">{{ $message }}</p>
                         @enderror
-                     </div>  --}}
+                     </div>
 
 
-
-     <div class="form-group h-25">
-                                <label for="description">Description</label>
-                                <textarea name="description" id="summernote">{{ old('description',$blog->description) }}</textarea>
-                                @error('description')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-
-
-
-                     {{--  <div class="mb-3">
-                        <label for="shortdescription" class="form-label">Short Description (optional)</label>
-                        <input type="text" class="form-control" id="shortdescription" name="shortdescription" value="{{ old('shortdescription', $blog->short_description) }}">
-                        @error('shortdescription')
-                        <div class="text-danger">{{ $message }}</div>
+                     <div class="form-group h-25">
+                        <label for="shortdescription">Short Description</label>
+                        <textarea name="short_description"
+                           id="shortdescription-editor">{{ old('short_description',$blog->description) }}</textarea>
+                        @error('short_description')
+                        <p class="text-danger">{{ $message }}</p>
                         @enderror
-                     </div>  --}}
-                     
-       <div class="form-group h-25">
-                                <label for="shortdescription">Short Description</label>
-                                <textarea name="shortdescription" id="shortdescription-editor">{{ old('shortdescription',$blog->description) }}</textarea>
-                                @error('shortdescription')
-                                    <p class="text-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
+                     </div>
 
                      <div class="mb-3">
                         <label for="image" class="form-label">Image</label><br>
                         @if($blog->image)
-                           <img src="{{ asset($blog->image) }}" alt="Current Image" style="width: 100px; margin-bottom: 10px;">
+                        <img src="{{ asset($blog->image) }}" alt="Current Image"
+                           style="width: 100px; margin-bottom: 10px;">
                         @endif
                         <input type="file" class="form-control" id="image" name="image">
                         @error('image')
@@ -97,30 +82,30 @@
    </div>
 </div>
 
-{{--  start summrnode js  --}}
+{{-- start summrnode js --}}
 
 @push('js')
-    <!-- jQuery and Bootstrap JS via CDN -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery and Bootstrap JS via CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Summernote JS via CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
+<!-- Summernote JS via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
+<script>
+   $(document).ready(function () {
             $('#summernote').summernote({
                 height: 200
             });
         });
-    </script>
-     <script>
-        $(document).ready(function () {
+</script>
+<script>
+   $(document).ready(function () {
             $('#shortdescription-editor').summernote({
                 height: 200
             });
         });
-    </script>
+</script>
 @endpush
 
 @endsection
