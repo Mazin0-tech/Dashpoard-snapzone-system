@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ProjectuiController extends Controller
@@ -12,7 +13,8 @@ class ProjectuiController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Project::latest()->paginate(6);
+        return view('front.project.index', compact('projects'));
     }
 
     /**
@@ -36,7 +38,8 @@ class ProjectuiController extends Controller
      */
     public function show(string $id)
     {
-        //
+    $project = Project::with('galleries', 'service.faqs')->findOrFail($id);
+    return view('front.project.show', compact('project'));
     }
 
     /**

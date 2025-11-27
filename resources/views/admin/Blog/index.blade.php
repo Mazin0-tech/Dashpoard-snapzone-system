@@ -109,11 +109,11 @@
                   <td>{!! Str::limit(strip_tags($bloggg->description), 50) !!}</td>
                   <td>{!! Str::limit(strip_tags($bloggg->short_description), 50) !!}</td>
                   <td>
-                    <a href="{{ route('blog.edit' , $bloggg->id) }}" class="btn btn-primary">
+                    <a href="{{ route('blog.edit', $bloggg->id) }}" class="btn btn-primary">
                       <i class="fa-solid fa-pen-to-square"></i>
                     </a>
 
-                    <form class="m-auto d-inline" method="post" action="{{ route('blog.destroy',$bloggg->id) }}"
+                    <form class="m-auto d-inline" method="post" action="{{ route('blog.destroy', $bloggg->id) }}"
                       onsubmit="return confirm('Are you sure you want to delete this blog post?');">
                       @csrf
                       @method('delete')

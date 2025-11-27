@@ -82,6 +82,70 @@
 
     @stack('css')
 
+    <style>
+        .side-menu__item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #a0a7b8;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .side-menu__item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .side-menu__icon {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .side-menu__label {
+            flex: 1;
+        }
+
+        .side-menu__angle {
+            margin-left: auto;
+        }
+
+        .slide-menu.child1 {
+            background: #1a233a;
+        }
+
+        .slide-menu.child1 .side-menu__item {
+            padding-left: 50px;
+            font-size: 14px;
+        }
+
+        .slide__category {
+            padding: 15px 20px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #5b6e88;
+            letter-spacing: 0.5px;
+        }
+
+        .side-menu__label1 {
+            padding: 10px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #8a99b5;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #2d374d;
+        }
+
+        .text-danger.side-menu__item:hover {
+            background: rgba(220, 53, 69, 0.1);
+            color: #fff;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -782,29 +846,11 @@
                         {{-- End::FAQs --}}
 
                         {{-- Start::Contact --}}
-                        <li class="slide has-sub">
-                            <a href="javascript:void(0);" class="side-menu__item">
-                                <i class="bx bx-envelope side-menu__icon"></i>
+                        <li class="slide">
+                            <a href="{{ route('contact.edit', 1) }}" class="side-menu__item">
+                                <i class="bx bx-list-ul side-menu__icon"></i>
                                 <span class="side-menu__label">Contact</span>
-                                <i class="fe fe-chevron-right side-menu__angle"></i>
                             </a>
-                            <ul class="slide-menu child1">
-                                <li class="slide side-menu__label1">
-                                    <a href="javascript:void(0)">Contact Management</a>
-                                </li>
-                                <li class="slide">
-                                    <a href="{{ route('contact.create') }}" class="side-menu__item">
-                                        <i class="bx bx-plus-circle side-menu__icon"></i>
-                                        Add Contact
-                                    </a>
-                                </li>
-                                <li class="slide">
-                                    <a href="{{ route('contact.index') }}" class="side-menu__item">
-                                        <i class="bx bx-list-ul side-menu__icon"></i>
-                                        All Contacts
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                         {{-- End::Contact --}}
 
@@ -854,74 +900,15 @@
             {{-- End::main-sidebar --}}
         </aside>
 
-        <style>
-            .side-menu__item {
-                display: flex;
-                align-items: center;
-                padding: 12px 20px;
-                color: #a0a7b8;
-                text-decoration: none;
-                transition: all 0.3s ease;
-            }
 
-            .side-menu__item:hover {
-                color: #fff;
-                background: rgba(255, 255, 255, 0.1);
-            }
-
-            .side-menu__icon {
-                margin-right: 12px;
-                font-size: 18px;
-                width: 20px;
-                text-align: center;
-            }
-
-            .side-menu__label {
-                flex: 1;
-            }
-
-            .side-menu__angle {
-                margin-left: auto;
-            }
-
-            .slide-menu.child1 {
-                background: #1a233a;
-            }
-
-            .slide-menu.child1 .side-menu__item {
-                padding-left: 50px;
-                font-size: 14px;
-            }
-
-            .slide__category {
-                padding: 15px 20px 8px;
-                font-size: 11px;
-                font-weight: 600;
-                text-transform: uppercase;
-                color: #5b6e88;
-                letter-spacing: 0.5px;
-            }
-
-            .side-menu__label1 {
-                padding: 10px 20px;
-                font-size: 12px;
-                font-weight: 600;
-                color: #8a99b5;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                border-bottom: 1px solid #2d374d;
-            }
-
-            .text-danger.side-menu__item:hover {
-                background: rgba(220, 53, 69, 0.1);
-                color: #fff;
-            }
-        </style>
         {{-- End::app-sidebar --}}
 
 
 
         @yield('content')
+
+
+
 
         <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModal" aria-hidden="true">
             <div class="modal-dialog">
@@ -996,7 +983,8 @@
                         {{ $settings->site_name ?? 'Default Site Name' }}
                     </a>.
                     Designed with <span class="bi bi-heart-fill text-danger"></span> by
-                    <a href="{{ url('/') }}" target="_blank" class="fw-semibold text-primary text-decoration-underline">
+                    <a href="{{ url('/admin') }}" target="_blank"
+                        class="fw-semibold text-primary text-decoration-underline">
                         {{ $settings->site_name ?? 'Default Site Name' }}
                     </a>. All rights reserved.
                 </span>

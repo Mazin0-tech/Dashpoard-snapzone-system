@@ -33,11 +33,11 @@
 <section>
   <div class="container">
     <div class="blogs-content">
-      @foreach ( $blogs as $blog ) 
-        
-      <a href="{{ route('blogfront.show' , $blog->id) }}" class="blog-card">
+      @foreach ( $blogs as $blog )
+
+      <a href="{{ route('blogfront.show', $blog->id) }}" class="blog-card">
         <div class="blog-image">
-          <img src="{{ $blog->image ?? asset('front/img/blogs/blog-1.png') }}" alt="Blog Image 1" />
+          <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}" />
         </div>
         <div class="blog-info">
           <div class="blog-heading">
@@ -49,7 +49,7 @@
               {{ $blog->title }}
             </h4>
             <p class="blog-description">
-              {!! $blog->short_description !!}
+              {!! Str::limit(strip_tags($blog->short_description), 150) !!}
             </p>
           </div>
           <div class="blog-card-btn">
@@ -58,18 +58,21 @@
           </div>
         </div>
       </a>
+
       @endforeach
     </div>
 
+    @if($blogs->hasMorePages())
     <div class="ak-height-100 ak-height-lg-50"></div>
     <div class="ak-center">
-    <a href="{{ $blogs->nextPageUrl() }}" class="circle-btn circle-btn-anim">
-      <span class="text text-uppercase">
-        Another <br />Articles
-        <i class="flaticon-up-right-arrow"></i>
-      </span>
-    </a>
+      <a href="{{ $blogs->nextPageUrl() }}" class="circle-btn circle-btn-anim">
+        <span class="text text-uppercase">
+          Load More <br />Articles
+          <i class="flaticon-up-right-arrow"></i>
+        </span>
+      </a>
     </div>
+    @endif
   </div>
 </section>
 <!-- End  Blogs-->

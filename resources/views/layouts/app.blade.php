@@ -20,9 +20,12 @@
     <title>{{ $settings->title }}</title>
 
     <link rel="stylesheet" type="text/css" href="{{ asset('front/fonts/flaticon_cretio.css') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('front/css/plugins/swiper.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('front/css/plugins/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('front/css/style.css') }}" />
+
+    @stack('css')
 </head>
 
 <body class="dark">
@@ -52,42 +55,50 @@
             <div class="container container-customize">
                 <div class="ak-main_header_in">
                     <div class="ak-main-header-left">
-                        <a class="ak-site_branding dark-logo" href="index.html">
-                            <img src="{{ asset('front/img/logo/dark-logo.svg') }}" alt="..." />
+                        <a class="ak-site_branding dark-logo" href="{{ route('home') }}">
+                            @if ($settings->dark_logo)
+                            <img src="{{ asset($settings->dark_logo) }}" alt="{{ $settings->site_name }}" />
+                            @else
+                            <img src="{{ asset('front/img/logo/dark-logo.svg') }}" alt="{{ $settings->site_name }}" />
+                            @endif
                         </a>
-                        <a class="ak-site_branding white-logo" href="index.html">
-                            <img src="{{ asset('front/img/logo/white-logo.svg') }}" alt="..." />
+                        <a class="ak-site_branding white-logo" href="{{ route('home') }}">
+                            @if ($settings->logo)
+                            <img src="{{ asset($settings->logo) }}" alt="{{ $settings->site_name }}" />
+                            @else
+                            <img src="{{ asset('front/img/logo/white-logo.svg') }}" alt="{{ $settings->site_name }}" />
+                            @endif
                         </a>
                     </div>
                     <div class="ak-main-header-center">
                         <div class="ak-nav ak-medium">
-                          <ul class="ak-nav_list">
-                        
-                            <li>
-                                <a href="{{ route('home') }}">Home</a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ route('servicefront.index') }}">Service</a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ route('projectfront.index') }}">Projects</a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ route('blogfront.index') }}">Blog</a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ route('aboutfront.index') }}">About Us</a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ route('contactfront.index') }}">Contact</a>
-                            </li>
-                        
-                        </ul>
+                            <ul class="ak-nav_list">
+
+                                <li>
+                                    <a href="{{ route('home') }}">Home</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('servicefront.index') }}">Service</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('projectfront.index') }}">Projects</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('blogfront.index') }}">Blog</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('aboutfront.index') }}">About Us</a>
+                                </li>
+
+                                <li>
+                                    <a href="{{ route('contactfront.index') }}">Contact</a>
+                                </li>
+
+                            </ul>
                         </div>
                     </div>
                     <div class="ak-main-header-right">
@@ -205,7 +216,7 @@
                     </div>
                     <div class="footer-btn-email">
                         <div class="footer-btn-content">
-                            <a href="contact.html" class="footer-btn circle-btn-anim">
+                            <a href="{{ route('contactfront.index') }}" class="footer-btn circle-btn-anim">
                                 <span class="text">
                                     Start
                                     <i class="flaticon-up-right-arrow"></i>
@@ -215,14 +226,21 @@
                         </div>
                         <div class="footer-email">
                             <p class="email-short-title">Say hello!</p>
-                            <a href="emailto:info@email.com"> info@email.com</a>
+                            <a href="mailto:{{ $settings->email ?? 'info@email.com' }}">
+                                {{ $settings->email ?? 'info@email.com' }}
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="footer-content">
                     <div class="about-company">
+                        @if($settings->logo)
+                        <img class="footer-logo" src="{{ asset($settings->logo) }}"
+                            alt="{{ $settings->site_name ?? 'Site Logo' }}" />
+                        @else
                         <img class="footer-logo" src="{{ asset('front/img/logo/footer-logo.svg') }}"
                             alt="white-logo.svg" />
+                        @endif
                         <p class="about-company-desp">
                             We thrive on creativity and <span>innovation</span>. Our team is
                             constantly exploring new ideas and approaches to ensure your
@@ -231,22 +249,26 @@
                     </div>
 
                     <div class="address-phn">
-                        <a href="telto:(406)555-0120" class="phn">
+                        @if($settings->phone)
+                        <a href="tel:{{ $settings->phone }}" class="phn">
                             <span>
                                 <i class="flaticon-telephone"></i>
                             </span>
-                            (406) 555-012
+                            {{ $settings->phone }}
                         </a>
-                        <p class="address">901 N Pitt Str., Suite 170 Alexandria, USA</p>
+                        @endif
+                        @if($settings->address)
+                        <p class="address">{{ $settings->address }}</p>
+                        @endif
                     </div>
 
                     <div class="footer-list-content">
                         <ul class="footer-list-menu">
-                            <li><a href="index.html">Home</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li><a href="services.html">Services</a></li>
-                            <li><a href="portfolio.html">Portfolio</a></li>
-                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><a href="{{ url('/') }}">Home</a></li>
+                            <li><a href="{{ route('aboutfront.index') }}">About Us</a></li>
+                            <li><a href="{{ route('servicefront.index') }}">Services</a></li>
+                            <li><a href="{{ route('projectfront.index') }}">Projects</a></li>
+                            <li><a href="{{ route('contactfront.index') }}">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -256,19 +278,48 @@
         <div class="copy-right-content">
             <div class="container">
                 <div class="ak-space-between">
-                    <div class="social-icon">
-                        <a href="#" class="icon">
-                            <i class="flaticon-facebook"></i>
-                        </a>
-                        <a href="#" class="icon">
-                            <i class="flaticon-video"></i>
-                        </a>
-                        <a href="#" class="icon">
-                            <i class="flaticon-linkedin"></i>
-                        </a>
-                    </div>
-                    <a href="#" class="copy-right-text">© 2025 <span>Thememarch.</span> All rights
-                        reserved.</a>
+                 <div class="social-icon">
+                    @if($settings->facebook)
+                    <a href="{{ $settings->facebook }}" class="icon" target="_blank">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    @endif
+                    @if($settings->youtube)
+                    <a href="{{ $settings->youtube }}" class="icon" target="_blank">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                    @endif
+                    @if($settings->linkedin)
+                    <a href="{{ $settings->linkedin }}" class="icon" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    @endif
+                    @if($settings->twitter)
+                    <a href="{{ $settings->twitter }}" class="icon" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    @endif
+                    @if($settings->instagram)
+                    <a href="{{ $settings->instagram }}" class="icon" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    @endif
+                    @if($settings->tiktok)
+                    <a href="{{ $settings->tiktok }}" class="icon" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    @endif
+                    @if($settings->snapchat)
+                    <a href="{{ $settings->snapchat }}" class="icon" target="_blank">
+                        <i class="fab fa-snapchat-ghost"></i>
+                    </a>
+                    @endif
+                </div>
+                    <a href="#" class="copy-right-text">
+                        © {{ date('Y') }}
+                        <span>{{ $settings->site_name ?? 'Thememarch' }}</span>.
+                        All rights reserved.
+                    </a>
                 </div>
             </div>
         </div>
@@ -329,6 +380,7 @@
     <script src="{{ asset('front/js/plugins/lenis.min.js') }}"></script>
 
     <script src="{{ asset('front/js/main.js') }}"></script>
+    @stack('js')
 </body>
 
 </html>

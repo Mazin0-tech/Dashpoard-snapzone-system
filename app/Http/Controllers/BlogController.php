@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class BlogController extends Controller
 {
 
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
@@ -19,7 +19,7 @@ class BlogController extends Controller
     public function index()
     {
         $blog = Blog::all();
-        return view('admin.Blog.index',compact('blog'));
+        return view('admin.Blog.index', compact('blog'));
     }
 
     /**
@@ -48,15 +48,15 @@ class BlogController extends Controller
 
         $input['short_description'] = $request->shortdescription;
         if ($request->hasFile('image')) {
-       $image = $request->file('image');
-       $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-    
-       // نقل الصورة للمجلد العام
-       $image->move(public_path('images'), $imageName);
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
 
-       // الحصول على الرابط الكامل مع http/https
-       $input['image'] = url('/images/' . $imageName);
-       }
+            // نقل الصورة للمجلد العام
+            $image->move(public_path('images'), $imageName);
+
+            // الحصول على الرابط الكامل مع http/https
+            $input['image'] = url('/images/' . $imageName);
+        }
 
         Blog::create($input);
 
@@ -67,15 +67,15 @@ class BlogController extends Controller
     {
         $blog = Blog::find($id);
 
-        if (!$blog){
+        if (!$blog) {
             return redirect()->route('blog.index')->with('error', 'Blog not found');
-        
+
         }
         return view('admin.Blog.edit', compact('blog'));
     }
 
-    
-    
+
+
 
     /**
      * Update the specified resource in storage.
@@ -91,29 +91,29 @@ class BlogController extends Controller
         ]);
         $blog = Blog::find($id);
 
-         $data = $request->except([
-          'image'
-          ]);
+        $data = $request->except([
+            'image'
+        ]);
 
-              // لو فيه صورة جديدة
-         if ($request->hasFile('image')) {
-         if ($blog->image) {
-          $oldImagePath = public_path('images/' . basename($blog->image));
-         if (file_exists($oldImagePath)) {
-            unlink($oldImagePath);
-        }
-    }
+        // لو فيه صورة جديدة
+        if ($request->hasFile('image')) {
+            if ($blog->image) {
+                $oldImagePath = public_path('images/' . basename($blog->image));
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
 
-        $image = $request->file('image');
-        $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('images'), $imageName);
+            $image = $request->file('image');
+            $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
 
-        $data['image'] = url('images/' . $imageName);
+            $data['image'] = url('images/' . $imageName);
         }
 
         $blog->update($data);
 
-            return redirect()->route('blog.index')->with('success', 'Blog updated successfully.');
+        return redirect()->route('blog.index')->with('success', 'Blog updated successfully.');
     }
 
     /**
@@ -123,14 +123,14 @@ class BlogController extends Controller
     {
         $blog = Blog::find($id);
         if ($blog) {
-             if($blog->image && file_exists(public_path('images/' . basename($blog->image)))){
+            if ($blog->image && file_exists(public_path('images/' . basename($blog->image)))) {
                 unlink(public_path('images/' . basename($blog->image)));
 
-             }
-             $blog->delete();
-             return redirect()->route('blog.index')->with('success', 'Blog deleted successfully.');
+            }
+            $blog->delete();
+            return redirect()->route('blog.index')->with('success', 'Blog deleted successfully.');
 
-        }else{
+        } else {
             return redirect()->route('blog.index')->with('error', 'Blog not found.');
         }
     }

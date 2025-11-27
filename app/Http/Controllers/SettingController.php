@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class SettingController extends Controller
 {
 
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
@@ -16,7 +16,7 @@ class SettingController extends Controller
     public function edit($id)
     {
         $setting = Setting::findOrFail($id);
-        return view('admin.Settings.edit', compact('setting'));
+        return view('admin.Setting.edit', compact('setting'));
     }
 
     public function update(Request $request, $id)
@@ -38,10 +38,11 @@ class SettingController extends Controller
             'linkedin' => 'nullable|url|max:255',
             'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,ico|max:1024',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'dark_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $setting = Setting::findOrFail($id);
-        $input = $request->except(['favicon', 'logo']);
+        $input = $request->except(['favicon', 'logo', 'dark_logo']);
 
         // Handle favicon upload
         if ($request->hasFile('favicon')) {
@@ -57,6 +58,22 @@ class SettingController extends Controller
             $faviconName = 'favicon_' . uniqid() . '.' . $favicon->getClientOriginalExtension();
             $favicon->move(public_path('images/settings'), $faviconName);
             $input['favicon'] = url('images/settings/' . $faviconName);
+        }
+
+        // Handle dark_logo upload
+        if ($request->hasFile('dark_logo')) {
+            // Delete old dark_logo if exists
+            if ($setting->dark_logo) {
+                $oldDarkLogoPath = public_path('images/settings/' . basename($setting->dark_logo));
+                if (file_exists($oldDarkLogoPath)) {
+                    unlink($oldFaviconPath);
+                }
+            }
+
+            $dark_logo = $request->file('dark_logo');
+            $darkLogoName = 'dark_logo_' . uniqid() . '.' . $dark_logo->getClientOriginalExtension();
+            $dark_logo->move(public_path('images/settings'), $darkLogoName);
+            $input['dark_logo'] = url('images/settings/' . $darkLogoName);
         }
 
         // Handle logo upload

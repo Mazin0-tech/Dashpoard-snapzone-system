@@ -13,6 +13,7 @@ class Setting extends Model
         'site_name',
         'favicon',
         'logo',
+        'dark_logo',
         'phone',
         'email',
         'facebook',

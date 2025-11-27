@@ -45,7 +45,7 @@
                      <div class="form-group h-25">
                         <label for="description">Description</label>
                         <textarea name="description"
-                           id="summernote">{{ old('description',$blog->description) }}</textarea>
+                           id="summernote">{{ old('description', $blog->description) }}</textarea>
                         @error('description')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -55,7 +55,7 @@
                      <div class="form-group h-25">
                         <label for="shortdescription">Short Description</label>
                         <textarea name="short_description"
-                           id="shortdescription-editor">{{ old('short_description',$blog->description) }}</textarea>
+                           id="shortdescription-editor">{{ old('short_description', $blog->description) }}</textarea>
                         @error('short_description')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -94,17 +94,17 @@
 
 <script>
    $(document).ready(function () {
-            $('#summernote').summernote({
-                height: 200
-            });
-        });
+                    $('#summernote').summernote({
+                        height: 200
+                    });
+                });
 </script>
 <script>
    $(document).ready(function () {
-            $('#shortdescription-editor').summernote({
-                height: 200
-            });
-        });
+                    $('#shortdescription-editor').summernote({
+                        height: 200
+                    });
+                });
 </script>
 @endpush
 

@@ -147,65 +147,65 @@
 
 <script>
     $(document).ready(function () {
-        // Question preview
-        $('#question').on('input', function() {
-            const question = $(this).val();
-            const preview = $('#questionPreview');
-            const previewText = $('#previewQuestion');
-            
-            if (question.trim()) {
-                previewText.text(question);
-                preview.show();
-            } else {
-                preview.hide();
-            }
-        });
+                // Question preview
+                $('#question').on('input', function() {
+                    const question = $(this).val();
+                    const preview = $('#questionPreview');
+                    const previewText = $('#previewQuestion');
 
-        // Answer preview
-        $('#answer').on('input', function() {
-            const answer = $(this).val();
-            const preview = $('#answerPreview');
-            const previewText = $('#previewAnswer');
-            
-            if (answer.trim()) {
-                previewText.text(answer);
-                preview.show();
-            } else {
-                preview.hide();
-            }
-        });
+                    if (question.trim()) {
+                        previewText.text(question);
+                        preview.show();
+                    } else {
+                        preview.hide();
+                    }
+                });
 
-        // Form validation
-        $('#faqForm').on('submit', function(e) {
-            const question = $('#question').val().trim();
-            const answer = $('#answer').val().trim();
-            
-            if (!question) {
-                e.preventDefault();
-                alert('Please enter a question');
-                $('#question').focus();
-                return false;
-            }
-            
-            if (!answer) {
-                e.preventDefault();
-                alert('Please enter an answer');
-                $('#answer').focus();
-                return false;
-            }
-            
-            return true;
-        });
+                // Answer preview
+                $('#answer').on('input', function() {
+                    const answer = $(this).val();
+                    const preview = $('#answerPreview');
+                    const previewText = $('#previewAnswer');
 
-        // Trigger preview on page load if there are old values
-        @if(old('question'))
-            $('#question').trigger('input');
-        @endif
-        
-        @if(old('answer'))
-            $('#answer').trigger('input');
-        @endif
-    });
+                    if (answer.trim()) {
+                        previewText.text(answer);
+                        preview.show();
+                    } else {
+                        preview.hide();
+                    }
+                });
+
+                // Form validation
+                $('#faqForm').on('submit', function(e) {
+                    const question = $('#question').val().trim();
+                    const answer = $('#answer').val().trim();
+
+                    if (!question) {
+                        e.preventDefault();
+                        alert('Please enter a question');
+                        $('#question').focus();
+                        return false;
+                    }
+
+                    if (!answer) {
+                        e.preventDefault();
+                        alert('Please enter an answer');
+                        $('#answer').focus();
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                // Trigger preview on page load if there are old values
+                @if(old('question'))
+                    $('#question').trigger('input');
+                @endif
+
+                @if(old('answer'))
+                    $('#answer').trigger('input');
+                @endif
+            });
 </script>
 @endpush
 

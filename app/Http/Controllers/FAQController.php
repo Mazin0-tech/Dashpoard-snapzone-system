@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class FAQController extends Controller
 {
 
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
@@ -19,26 +19,26 @@ class FAQController extends Controller
     public function index(Request $request)
     {
         $query = Faq::with('service');
-        
+
         if ($request->has('service_id') && $request->service_id) {
             $query->where('service_id', $request->service_id);
         }
-        
+
         if ($request->has('is_active') && $request->is_active !== '') {
             $query->where('is_active', $request->boolean('is_active'));
         }
-        
+
         if ($request->boolean('active_only')) {
             $query->active();
         }
-        
+
         if ($request->boolean('general_only')) {
             $query->general();
         }
-        
+
         $faqs = $query->latest()->get();
         $services = Service::get();
-        
+
         return view('admin.faq.index', compact('faqs', 'services'));
     }
 
@@ -65,10 +65,10 @@ class FAQController extends Controller
 
         try {
             Faq::create($validated);
-            
+
             return redirect()->route('faq.index')
                 ->with('success', 'FAQ created successfully');
-                
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
@@ -107,10 +107,10 @@ class FAQController extends Controller
 
         try {
             $faq->update($validated);
-            
+
             return redirect()->route('faq.index')
                 ->with('success', 'FAQ updated successfully');
-                
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
@@ -125,10 +125,10 @@ class FAQController extends Controller
     {
         try {
             $faq->delete();
-            
+
             return redirect()->route('faq.index')
                 ->with('success', 'FAQ deleted successfully');
-                
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Failed to delete FAQ: ' . $e->getMessage());
@@ -142,11 +142,11 @@ class FAQController extends Controller
     {
         try {
             $faq->update(['is_active' => !$faq->is_active]);
-            
+
             $status = $faq->is_active ? 'activated' : 'deactivated';
             return redirect()->back()
                 ->with('success', "FAQ {$status} successfully");
-                
+
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Failed to change FAQ status: ' . $e->getMessage());

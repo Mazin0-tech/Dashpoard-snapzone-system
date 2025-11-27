@@ -197,80 +197,80 @@
 
 <script>
     $(document).ready(function () {
-        const originalQuestion = $('#question').val();
-        const originalAnswer = $('#answer').val();
+                const originalQuestion = $('#question').val();
+                const originalAnswer = $('#answer').val();
 
-        // Question preview and comparison
-        $('#question').on('input', function() {
-            const question = $(this).val();
-            const preview = $('#questionPreview');
-            const previewText = $('#previewQuestion');
-            const previewInfo = $('#questionPreviewText');
-            
-            if (question.trim() && question !== originalQuestion) {
-                previewText.text(question);
-                preview.show();
-                previewInfo.text('New question preview');
-            } else if (question === originalQuestion) {
-                preview.hide();
-                previewInfo.text('No changes made to question');
-            } else {
-                preview.hide();
-                previewInfo.text('Question is empty');
-            }
-        });
+                // Question preview and comparison
+                $('#question').on('input', function() {
+                    const question = $(this).val();
+                    const preview = $('#questionPreview');
+                    const previewText = $('#previewQuestion');
+                    const previewInfo = $('#questionPreviewText');
 
-        // Answer preview and comparison
-        $('#answer').on('input', function() {
-            const answer = $(this).val();
-            const preview = $('#answerPreview');
-            const previewText = $('#previewAnswer');
-            const previewInfo = $('#answerPreviewText');
-            
-            if (answer.trim() && answer !== originalAnswer) {
-                previewText.text(answer);
-                preview.show();
-                previewInfo.text('New answer preview');
-            } else if (answer === originalAnswer) {
-                preview.hide();
-                previewInfo.text('No changes made to answer');
-            } else {
-                preview.hide();
-                previewInfo.text('Answer is empty');
-            }
-        });
+                    if (question.trim() && question !== originalQuestion) {
+                        previewText.text(question);
+                        preview.show();
+                        previewInfo.text('New question preview');
+                    } else if (question === originalQuestion) {
+                        preview.hide();
+                        previewInfo.text('No changes made to question');
+                    } else {
+                        preview.hide();
+                        previewInfo.text('Question is empty');
+                    }
+                });
 
-        // Form validation
-        $('#faqForm').on('submit', function(e) {
-            const question = $('#question').val().trim();
-            const answer = $('#answer').val().trim();
-            
-            if (!question) {
-                e.preventDefault();
-                alert('Please enter a question');
-                $('#question').focus();
-                return false;
-            }
-            
-            if (!answer) {
-                e.preventDefault();
-                alert('Please enter an answer');
-                $('#answer').focus();
-                return false;
-            }
-            
-            return true;
-        });
+                // Answer preview and comparison
+                $('#answer').on('input', function() {
+                    const answer = $(this).val();
+                    const preview = $('#answerPreview');
+                    const previewText = $('#previewAnswer');
+                    const previewInfo = $('#answerPreviewText');
 
-        // Trigger preview on page load if there are changes from original
-        @if(old('question') && old('question') != $faq->question)
-            $('#question').trigger('input');
-        @endif
-        
-        @if(old('answer') && old('answer') != $faq->answer)
-            $('#answer').trigger('input');
-        @endif
-    });
+                    if (answer.trim() && answer !== originalAnswer) {
+                        previewText.text(answer);
+                        preview.show();
+                        previewInfo.text('New answer preview');
+                    } else if (answer === originalAnswer) {
+                        preview.hide();
+                        previewInfo.text('No changes made to answer');
+                    } else {
+                        preview.hide();
+                        previewInfo.text('Answer is empty');
+                    }
+                });
+
+                // Form validation
+                $('#faqForm').on('submit', function(e) {
+                    const question = $('#question').val().trim();
+                    const answer = $('#answer').val().trim();
+
+                    if (!question) {
+                        e.preventDefault();
+                        alert('Please enter a question');
+                        $('#question').focus();
+                        return false;
+                    }
+
+                    if (!answer) {
+                        e.preventDefault();
+                        alert('Please enter an answer');
+                        $('#answer').focus();
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                // Trigger preview on page load if there are changes from original
+                @if(old('question') && old('question') != $faq->question)
+                    $('#question').trigger('input');
+                @endif
+
+                @if(old('answer') && old('answer') != $faq->answer)
+                    $('#answer').trigger('input');
+                @endif
+            });
 </script>
 @endpush
 

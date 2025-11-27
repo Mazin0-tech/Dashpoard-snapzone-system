@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\About;
+use App\Models\Partner;
 use Illuminate\Http\Request;
 
 class AboutuiController extends Controller
@@ -12,7 +14,9 @@ class AboutuiController extends Controller
      */
     public function index()
     {
-        //
+        $about = About::first();
+        $partners = Partner::all(); 
+        return view('front.about.index', compact('about', 'partners'));
     }
 
     /**

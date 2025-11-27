@@ -11,7 +11,7 @@ class AboutController extends Controller
      * Display a listing of the resource.
      */
 
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
@@ -51,7 +51,7 @@ class AboutController extends Controller
         $about = About::findOrFail($id);
         $about->update($request->all());
 
-        return redirect()->back()   
+        return redirect()->back()
             ->with('success', 'About page updated successfully.');
     }
 

@@ -254,79 +254,79 @@
 
 <script>
     $(document).ready(function() {
-        $('#projects-table').DataTable({
-            responsive: true,
-            dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>' +
-                 '<"row"<"col-sm-12"tr>>' +
-                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-            buttons: [
-                {
-                    extend: 'copy',
-                    className: 'btn btn-sm btn-outline-secondary',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'csv',
-                    className: 'btn btn-sm btn-outline-primary',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'excel',
-                    className: 'btn btn-sm btn-outline-success',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    className: 'btn btn-sm btn-outline-danger',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'print',
-                    className: 'btn btn-sm btn-outline-dark',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                }
-            ],
-            language: {
-                search: "Search:",
-                lengthMenu: "Show _MENU_ entries",
-                info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                infoEmpty: "Showing 0 to 0 of 0 entries",
-                infoFiltered: "(filtered from _MAX_ total entries)",
-                zeroRecords: "No matching projects found",
-                paginate: {
-                    first: "First",
-                    last: "Last",
-                    next: "Next",
-                    previous: "Previous"
-                }
-            },
-            order: [[0, 'desc']],
-            pageLength: 10,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-            columnDefs: [
-                {
-                    targets: [1, 9], // Image and Gallery columns
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    targets: -1, // Actions column
-                    orderable: false,
-                    searchable: false
-                }
-            ]
-        });
-    });
+                $('#projects-table').DataTable({
+                    responsive: true,
+                    dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>' +
+                         '<"row"<"col-sm-12"tr>>' +
+                         '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                    buttons: [
+                        {
+                            extend: 'copy',
+                            className: 'btn btn-sm btn-outline-secondary',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'csv',
+                            className: 'btn btn-sm btn-outline-primary',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-sm btn-outline-success',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            className: 'btn btn-sm btn-outline-danger',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-sm btn-outline-dark',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        }
+                    ],
+                    language: {
+                        search: "Search:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoEmpty: "Showing 0 to 0 of 0 entries",
+                        infoFiltered: "(filtered from _MAX_ total entries)",
+                        zeroRecords: "No matching projects found",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "Next",
+                            previous: "Previous"
+                        }
+                    },
+                    order: [[0, 'desc']],
+                    pageLength: 10,
+                    lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                    columnDefs: [
+                        {
+                            targets: [1, 9], // Image and Gallery columns
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            targets: -1, // Actions column
+                            orderable: false,
+                            searchable: false
+                        }
+                    ]
+                });
+            });
 </script>
 @endpush
 

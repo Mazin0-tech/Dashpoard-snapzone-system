@@ -4,7 +4,7 @@
 @push('css')
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    
+
 @endpush
 <div class="main-content app-content">
     <div class="container-fluid">
@@ -324,8 +324,7 @@
                                 @forelse($blogs->take(5) as $blog)
                                 <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
                                     <div class="avatar avatar-sm me-3">
-                                        <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}"
-                                            class="rounded"
+                                        <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}" class="rounded"
                                             onerror="this.src='https://via.placeholder.com/40x40?text=B'">
                                     </div>
                                     <div class="flex-grow-1">
@@ -462,111 +461,111 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Projects by Industry Chart
-    var projectsCtx = document.getElementById('projectsChart').getContext('2d');
-    var projectsChart = new Chart(projectsCtx, {
-        type: 'bar',
-        data: {
-            labels: {!! json_encode($projects->groupBy('services')->keys()) !!},
-            datasets: [{
-                label: 'Projects Count',
-                data: {!! json_encode($projects->groupBy('services')->map->count()) !!},
-                backgroundColor: [
-                    '#007bff', '#28a745', '#ffc107', '#dc3545', 
-                    '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'
-                ],
-                borderWidth: 0,
-                borderRadius: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleFont: {
-                        size: 14
-                    },
-                    bodyFont: {
-                        size: 13
-                    }
-                }
+        var projectsCtx = document.getElementById('projectsChart').getContext('2d');
+        var projectsChart = new Chart(projectsCtx, {
+            type: 'bar',
+            data: {
+                labels: {!! json_encode($projects->groupBy('services')->keys()) !!},
+                datasets: [{
+                    label: 'Projects Count',
+                    data: {!! json_encode($projects->groupBy('services')->map->count()) !!},
+                    backgroundColor: [
+                        '#007bff', '#28a745', '#ffc107', '#dc3545', 
+                        '#6f42c1', '#fd7e14', '#20c997', '#e83e8c'
+                    ],
+                    borderWidth: 0,
+                    borderRadius: 4
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        drawBorder: false
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
                     },
-                    ticks: {
-                        stepSize: 1
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleFont: {
+                            size: 14
+                        },
+                        bodyFont: {
+                            size: 13
+                        }
                     }
                 },
-                x: {
-                    grid: {
-                        display: false
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        },
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
-        }
-    });
+        });
 
-    // Content Distribution Chart
-    var contentCtx = document.getElementById('contentChart').getContext('2d');
-    var contentChart = new Chart(contentCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Projects', 'Services', 'Partners', 'Blogs'],
-            datasets: [{
-                label: 'Content Distribution',
-                data: [
-                    {{ $projects->count() }},
-                    {{ $services->count() }},
-                    {{ $partners->count() }},
-                    {{ $blogs->count() }}
-                ],
-                backgroundColor: [
-                    '#007bff', '#28a745', '#ffc107', '#dc3545'
-                ],
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        usePointStyle: true,
-                        pointStyle: 'circle'
+        // Content Distribution Chart
+        var contentCtx = document.getElementById('contentChart').getContext('2d');
+        var contentChart = new Chart(contentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Projects', 'Services', 'Partners', 'Blogs'],
+                datasets: [{
+                    label: 'Content Distribution',
+                    data: [
+                        {{ $projects->count() }},
+                        {{ $services->count() }},
+                        {{ $partners->count() }},
+                        {{ $blogs->count() }}
+                    ],
+                    backgroundColor: [
+                        '#007bff', '#28a745', '#ffc107', '#dc3545'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
                     }
                 }
             }
-        }
-    });
+        });
 
-    // Add loading states
-    document.addEventListener('DOMContentLoaded', function() {
-        const quickActionCards = document.querySelectorAll('.quick-action-card');
-        quickActionCards.forEach(card => {
-            card.addEventListener('click', function(e) {
-                const originalText = this.querySelector('h6').textContent;
-                this.querySelector('h6').textContent = 'Loading...';
-                this.style.opacity = '0.7';
-                
-                setTimeout(() => {
-                    this.querySelector('h6').textContent = originalText;
-                    this.style.opacity = '1';
-                }, 2000);
+        // Add loading states
+        document.addEventListener('DOMContentLoaded', function() {
+            const quickActionCards = document.querySelectorAll('.quick-action-card');
+            quickActionCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    const originalText = this.querySelector('h6').textContent;
+                    this.querySelector('h6').textContent = 'Loading...';
+                    this.style.opacity = '0.7';
+
+                    setTimeout(() => {
+                        this.querySelector('h6').textContent = originalText;
+                        this.style.opacity = '1';
+                    }, 2000);
+                });
             });
         });
-    });
 </script>
 @endpush

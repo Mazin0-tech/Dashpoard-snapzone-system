@@ -23,11 +23,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-    Route::get('/', [HomeController::class , 'index' ])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::resource('service', ServiceuiController::class, ['names' => 'servicefront']);
+Route::resource('project', ProjectuiController::class, ['names' => 'projectfront']);
+Route::resource('blog', BloguiController::class, ['names' => 'blogfront']);
+Route::resource('contact', ContactuiController::class, ['names' => 'contactfront']);
+Route::resource('about', AboutuiController::class, ['names' => 'aboutfront']);
 
 
 Auth::routes();
-Route::middleware('auth')->prefix('admin')->group(function(){
+Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', function () {
         $user = Auth::user();
         $partners = Partner::all();
@@ -42,21 +48,9 @@ Route::middleware('auth')->prefix('admin')->group(function(){
     Route::resource('project', ProjectController::class);
     Route::resource('blog', BlogController::class);
     Route::resource('contact', ContactController::class);
-
     Route::resource('settings', SettingController::class);
     Route::resource('about', AboutController::class);
     Route::resource('partners', PartnerController::class);
     Route::resource('faq', FAQController::class);
     Route::post('faq/{faq}/toggle-status', [FAQController::class, 'toggleStatus'])->name('faq.toggle-status');
-    
-
-  
 });
-
-
-
-    Route::resource('service', ServiceuiController::class, ['names' => 'servicefront']);
-    Route::resource('project', ProjectuiController::class, ['names' => 'projectfront']);
-    Route::resource('blog', BloguiController::class, ['names' => 'blogfront']);
-    Route::resource('contact', ContactuiController::class, ['names' => 'contactfront']);
-    Route::resource('about', AboutuiController::class, ['names' => 'aboutfront']);

@@ -11,12 +11,12 @@ class BloguiController extends Controller
     /**
      * Display a listing of the resource.
      */
- public function index()
-{
-    $blogs = Blog::latest()->paginate(9); // 9 أو أي عدد تريد عرضه
+    public function index()
+    {
+        $blogs = Blog::latest()->paginate(6); 
 
-    return view('front.blog.index', compact('blogs'));
-}
+        return view('front.blog.index', compact('blogs'));
+    }
 
 
     /**
@@ -40,7 +40,8 @@ class BloguiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $blog = Blog::find($id);
+        return view('front.blog.show', compact('blog'));
     }
 
     /**

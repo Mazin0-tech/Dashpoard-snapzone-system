@@ -265,65 +265,65 @@
 
 <script>
     $(document).ready(function () {
-        // Initialize Summernote
-        $('#summernote').summernote({
-            height: 200,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontname', ['fontname']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'video']],
-                ['view', ['fullscreen', 'codeview', 'help']]
-            ]
-        });
+                // Initialize Summernote
+                $('#summernote').summernote({
+                    height: 200,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['fontname', ['fontname']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'picture', 'video']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
+                });
 
-        // Character counters for textareas
-        function setupCharacterCounter(textareaId, maxLength) {
-            const textarea = $('#' + textareaId);
-            const counter = $('<div class="form-text text-end"><span class="char-count">0</span>/' + maxLength + '</div>');
-            
-            textarea.after(counter);
-            
-            function updateCounter() {
-                const length = textarea.val().length;
-                counter.find('.char-count').text(length);
-                
-                if (length > maxLength) {
-                    counter.addClass('text-danger');
-                } else {
-                    counter.removeClass('text-danger');
+                // Character counters for textareas
+                function setupCharacterCounter(textareaId, maxLength) {
+                    const textarea = $('#' + textareaId);
+                    const counter = $('<div class="form-text text-end"><span class="char-count">0</span>/' + maxLength + '</div>');
+
+                    textarea.after(counter);
+
+                    function updateCounter() {
+                        const length = textarea.val().length;
+                        counter.find('.char-count').text(length);
+
+                        if (length > maxLength) {
+                            counter.addClass('text-danger');
+                        } else {
+                            counter.removeClass('text-danger');
+                        }
+                    }
+
+                    textarea.on('input', updateCounter);
+                    updateCounter(); // Initialize counter
                 }
-            }
-            
-            textarea.on('input', updateCounter);
-            updateCounter(); // Initialize counter
-        }
 
-        // Setup character counters for all limited textareas
-        setupCharacterCounter('text_1', 500);
-        setupCharacterCounter('text_2', 500);
-        setupCharacterCounter('footer_about', 1000);
-        setupCharacterCounter('mission', 1000);
-        setupCharacterCounter('vision', 1000);
-        setupCharacterCounter('service_quote', 500);
-        setupCharacterCounter('portfolio_quote', 500);
-        setupCharacterCounter('blog_quote', 500);
+                // Setup character counters for all limited textareas
+                setupCharacterCounter('text_1', 500);
+                setupCharacterCounter('text_2', 500);
+                setupCharacterCounter('footer_about', 1000);
+                setupCharacterCounter('mission', 1000);
+                setupCharacterCounter('vision', 1000);
+                setupCharacterCounter('service_quote', 500);
+                setupCharacterCounter('portfolio_quote', 500);
+                setupCharacterCounter('blog_quote', 500);
 
-        // Form validation
-        $('#aboutForm').on('submit', function() {
-            const title = $('#title').val();
-            const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
-            
-            if (!title || !description) {
-                alert('Please fill in all required fields');
-                return false;
-            }
-            return true;
-        });
-    });
+                // Form validation
+                $('#aboutForm').on('submit', function() {
+                    const title = $('#title').val();
+                    const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
+
+                    if (!title || !description) {
+                        alert('Please fill in all required fields');
+                        return false;
+                    }
+                    return true;
+                });
+            });
 </script>
 @endpush
 

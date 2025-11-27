@@ -303,121 +303,121 @@
 
 <script>
     $(document).ready(function () {
-            // Initialize Summernote
-            $('#summernote').summernote({
-                height: 200,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
-            // Handle new gallery image selection and featured image
-            $('#gallery').on('change', function(e) {
-                const files = e.target.files;
-                const preview = $('#galleryPreview');
-                const featuredSelection = $('#featuredSelection');
-                
-                preview.empty();
-                
-                if (files.length > 0) {
-                    featuredSelection.show();
-                    
-                    Array.from(files).forEach((file, index) => {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const isFeatured = index === 0 ? 'selected' : '';
-                            const badge = index === 0 ? '<span class="featured-badge">Featured</span>' : '';
-                            
-                            preview.append(`
-                                <div class="gallery-preview-item ${isFeatured}" data-index="${index}">
-                                    <img src="${e.target.result}" alt="Preview">
-                                    ${badge}
-                                </div>
-                            `);
-                        };
-                        reader.readAsDataURL(file);
+                    // Initialize Summernote
+                    $('#summernote').summernote({
+                        height: 200,
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'italic', 'underline', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['view', ['fullscreen', 'codeview', 'help']]
+                        ]
                     });
-                    
-                    // Set first image as featured by default
-                    $('#featuredImageIndex').val(0);
-                } else {
-                    featuredSelection.hide();
-                }
-            });
 
-            // Handle featured image selection for new images
-            $(document).on('click', '.gallery-preview-item', function() {
-                const index = $(this).data('index');
-                $('.gallery-preview-item').removeClass('selected').find('.featured-badge').remove();
-                $(this).addClass('selected').append('<span class="featured-badge">Featured</span>');
-                $('#featuredImageIndex').val(index);
-            });
+                    // Handle new gallery image selection and featured image
+                    $('#gallery').on('change', function(e) {
+                        const files = e.target.files;
+                        const preview = $('#galleryPreview');
+                        const featuredSelection = $('#featuredSelection');
 
-            // Handle featured image selection for existing images
-            $(document).on('click', '.existing-gallery-item', function() {
-                const galleryId = $(this).data('id');
-                setFeaturedImage(galleryId);
-            });
+                        preview.empty();
 
-            // Form validation
-            $('#projectForm').on('submit', function() {
-                const title = $('#title').val();
-                const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
-                
-                if (!title || !description) {
-                    alert('Please fill in all required fields');
-                    return false;
-                }
-                return true;
-            });
-        });
+                        if (files.length > 0) {
+                            featuredSelection.show();
 
-        // Set featured image for existing gallery
-        function setFeaturedImage(galleryId) {
-            if (confirm('Set this image as featured?')) {
-                $.ajax({
-                    url: '{{ route("project.toggleFeatured", "") }}/' + galleryId,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        _method: 'PUT'
-                    },
-                    success: function(response) {
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert('Error setting featured image');
-                    }
+                            Array.from(files).forEach((file, index) => {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const isFeatured = index === 0 ? 'selected' : '';
+                                    const badge = index === 0 ? '<span class="featured-badge">Featured</span>' : '';
+
+                                    preview.append(`
+                                        <div class="gallery-preview-item ${isFeatured}" data-index="${index}">
+                                            <img src="${e.target.result}" alt="Preview">
+                                            ${badge}
+                                        </div>
+                                    `);
+                                };
+                                reader.readAsDataURL(file);
+                            });
+
+                            // Set first image as featured by default
+                            $('#featuredImageIndex').val(0);
+                        } else {
+                            featuredSelection.hide();
+                        }
+                    });
+
+                    // Handle featured image selection for new images
+                    $(document).on('click', '.gallery-preview-item', function() {
+                        const index = $(this).data('index');
+                        $('.gallery-preview-item').removeClass('selected').find('.featured-badge').remove();
+                        $(this).addClass('selected').append('<span class="featured-badge">Featured</span>');
+                        $('#featuredImageIndex').val(index);
+                    });
+
+                    // Handle featured image selection for existing images
+                    $(document).on('click', '.existing-gallery-item', function() {
+                        const galleryId = $(this).data('id');
+                        setFeaturedImage(galleryId);
+                    });
+
+                    // Form validation
+                    $('#projectForm').on('submit', function() {
+                        const title = $('#title').val();
+                        const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
+
+                        if (!title || !description) {
+                            alert('Please fill in all required fields');
+                            return false;
+                        }
+                        return true;
+                    });
                 });
-            }
-        }
 
-        // Delete gallery image
-        function deleteGalleryImage(galleryId) {
-            if (confirm('Are you sure you want to delete this image?')) {
-                $.ajax({
-                    url: '{{ route("project.deleteGallery", "") }}/' + galleryId,
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        _method: 'DELETE'
-                    },
-                    success: function(response) {
-                        location.reload();
-                    },
-                    error: function(xhr) {
-                        alert('Error deleting image');
+                // Set featured image for existing gallery
+                function setFeaturedImage(galleryId) {
+                    if (confirm('Set this image as featured?')) {
+                        $.ajax({
+                            url: '{{ route("project.toggleFeatured", "") }}/' + galleryId,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                _method: 'PUT'
+                            },
+                            success: function(response) {
+                                location.reload();
+                            },
+                            error: function(xhr) {
+                                alert('Error setting featured image');
+                            }
+                        });
                     }
-                });
-            }
-        }
+                }
+
+                // Delete gallery image
+                function deleteGalleryImage(galleryId) {
+                    if (confirm('Are you sure you want to delete this image?')) {
+                        $.ajax({
+                            url: '{{ route("project.deleteGallery", "") }}/' + galleryId,
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                _method: 'DELETE'
+                            },
+                            success: function(response) {
+                                location.reload();
+                            },
+                            error: function(xhr) {
+                                alert('Error deleting image');
+                            }
+                        });
+                    }
+                }
 </script>
 @endpush
 

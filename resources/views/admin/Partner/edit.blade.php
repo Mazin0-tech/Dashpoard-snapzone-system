@@ -149,48 +149,48 @@
 
 <script>
     $(document).ready(function () {
-            // Handle logo preview
-            $('#logo').on('change', function(e) {
-                const files = e.target.files;
-                const preview = $('#logoPreview');
-                const previewImage = $('#previewImage');
-                const previewText = $('#previewText');
-                
-                if (files.length > 0) {
-                    const file = files[0];
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        previewImage.attr('src', e.target.result);
-                        preview.show();
-                        previewText.text('New logo preview');
-                    };
-                    
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.hide();
-                    previewText.text('No new logo selected');
-                }
-            });
+                    // Handle logo preview
+                    $('#logo').on('change', function(e) {
+                        const files = e.target.files;
+                        const preview = $('#logoPreview');
+                        const previewImage = $('#previewImage');
+                        const previewText = $('#previewText');
 
-            // Form validation
-            $('#partnerForm').on('submit', function() {
-                const title = $('#title').val();
-                
-                if (!title) {
-                    alert('Please enter partner name');
-                    return false;
-                }
-                
-                return true;
-            });
+                        if (files.length > 0) {
+                            const file = files[0];
+                            const reader = new FileReader();
 
-            // Show file name when selected
-            $('#logo').on('change', function() {
-                var fileName = $(this).val().split('\\').pop();
-                $(this).next('.form-text').before('<div class="text-success small">Selected: ' + fileName + '</div>');
-            });
-        });
+                            reader.onload = function(e) {
+                                previewImage.attr('src', e.target.result);
+                                preview.show();
+                                previewText.text('New logo preview');
+                            };
+
+                            reader.readAsDataURL(file);
+                        } else {
+                            preview.hide();
+                            previewText.text('No new logo selected');
+                        }
+                    });
+
+                    // Form validation
+                    $('#partnerForm').on('submit', function() {
+                        const title = $('#title').val();
+
+                        if (!title) {
+                            alert('Please enter partner name');
+                            return false;
+                        }
+
+                        return true;
+                    });
+
+                    // Show file name when selected
+                    $('#logo').on('change', function() {
+                        var fileName = $(this).val().split('\\').pop();
+                        $(this).next('.form-text').before('<div class="text-success small">Selected: ' + fileName + '</div>');
+                    });
+                });
 </script>
 @endpush
 

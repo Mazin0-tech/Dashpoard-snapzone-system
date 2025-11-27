@@ -228,76 +228,76 @@
 
 <script>
     $(document).ready(function () {
-            // Initialize Summernote
-            $('#summernote').summernote({
-                height: 200,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ]
-            });
-
-            // Handle gallery image selection and featured image
-            $('#gallery').on('change', function(e) {
-                const files = e.target.files;
-                const preview = $('#galleryPreview');
-                const featuredSelection = $('#featuredSelection');
-                
-                preview.empty();
-                
-                if (files.length > 0) {
-                    featuredSelection.show();
-                    
-                    Array.from(files).forEach((file, index) => {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const isFeatured = index === 0 ? 'selected' : '';
-                            const badge = index === 0 ? '<span class="featured-badge">Featured</span>' : '';
-                            
-                            preview.append(`
-                                <div class="gallery-preview-item ${isFeatured}" data-index="${index}">
-                                    <img src="${e.target.result}" alt="Preview">
-                                    ${badge}
-                                </div>
-                            `);
-                        };
-                        reader.readAsDataURL(file);
+                    // Initialize Summernote
+                    $('#summernote').summernote({
+                        height: 200,
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'italic', 'underline', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['view', ['fullscreen', 'codeview', 'help']]
+                        ]
                     });
-                    
-                    // Set first image as featured by default
-                    $('#featuredImageIndex').val(0);
-                } else {
-                    featuredSelection.hide();
-                }
-            });
 
-            // Handle featured image selection
-            $(document).on('click', '.gallery-preview-item', function() {
-                const index = $(this).data('index');
-                $('.gallery-preview-item').removeClass('selected').find('.featured-badge').remove();
-                $(this).addClass('selected').append('<span class="featured-badge">Featured</span>');
-                $('#featuredImageIndex').val(index);
-            });
+                    // Handle gallery image selection and featured image
+                    $('#gallery').on('change', function(e) {
+                        const files = e.target.files;
+                        const preview = $('#galleryPreview');
+                        const featuredSelection = $('#featuredSelection');
 
-            // Form validation
-            $('#projectForm').on('submit', function() {
-                // Basic validation
-                const title = $('#title').val();
-                const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
-                
-                if (!title || !description) {
-                    alert('Please fill in all required fields');
-                    return false;
-                }
-                return true;
-            });
-        });
+                        preview.empty();
+
+                        if (files.length > 0) {
+                            featuredSelection.show();
+
+                            Array.from(files).forEach((file, index) => {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    const isFeatured = index === 0 ? 'selected' : '';
+                                    const badge = index === 0 ? '<span class="featured-badge">Featured</span>' : '';
+
+                                    preview.append(`
+                                        <div class="gallery-preview-item ${isFeatured}" data-index="${index}">
+                                            <img src="${e.target.result}" alt="Preview">
+                                            ${badge}
+                                        </div>
+                                    `);
+                                };
+                                reader.readAsDataURL(file);
+                            });
+
+                            // Set first image as featured by default
+                            $('#featuredImageIndex').val(0);
+                        } else {
+                            featuredSelection.hide();
+                        }
+                    });
+
+                    // Handle featured image selection
+                    $(document).on('click', '.gallery-preview-item', function() {
+                        const index = $(this).data('index');
+                        $('.gallery-preview-item').removeClass('selected').find('.featured-badge').remove();
+                        $(this).addClass('selected').append('<span class="featured-badge">Featured</span>');
+                        $('#featuredImageIndex').val(index);
+                    });
+
+                    // Form validation
+                    $('#projectForm').on('submit', function() {
+                        // Basic validation
+                        const title = $('#title').val();
+                        const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
+
+                        if (!title || !description) {
+                            alert('Please fill in all required fields');
+                            return false;
+                        }
+                        return true;
+                    });
+                });
 </script>
 @endpush
 

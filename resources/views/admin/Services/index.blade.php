@@ -201,166 +201,166 @@
 
 <script>
   $(document).ready(function() {
-        // Initialize DataTable
-        $('#services-table').DataTable({
-            responsive: true,
-            dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>' +
-                 '<"row"<"col-sm-12"tr>>' +
-                 '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-            buttons: [
-                {
-                    extend: 'copy',
-                    className: 'btn btn-sm btn-outline-secondary',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'csv',
-                    className: 'btn btn-sm btn-outline-primary',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'excel',
-                    className: 'btn btn-sm btn-outline-success',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    className: 'btn btn-sm btn-outline-danger',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'print',
-                    className: 'btn btn-sm btn-outline-dark',
-                    exportOptions: {
-                        columns: ':not(:last-child)'
-                    }
-                }
-            ],
-            language: {
-                search: "Search:",
-                lengthMenu: "Show _MENU_ entries",
-                info: "Showing _START_ to _END_ of _TOTAL_ entries",
-                infoEmpty: "Showing 0 to 0 of 0 entries",
-                infoFiltered: "(filtered from _MAX_ total entries)",
-                zeroRecords: "No matching services found",
-                paginate: {
-                    first: "First",
-                    last: "Last",
-                    next: "Next",
-                    previous: "Previous"
-                }
-            },
-            order: [[0, 'desc']],
-            pageLength: 10,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-            columnDefs: [
-                {
-                    targets: [1, 8], // Image and Actions columns
-                    orderable: false,
-                    searchable: false
-                }
-            ]
-        });
+                // Initialize DataTable
+                $('#services-table').DataTable({
+                    responsive: true,
+                    dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>' +
+                         '<"row"<"col-sm-12"tr>>' +
+                         '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                    buttons: [
+                        {
+                            extend: 'copy',
+                            className: 'btn btn-sm btn-outline-secondary',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'csv',
+                            className: 'btn btn-sm btn-outline-primary',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            className: 'btn btn-sm btn-outline-success',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            className: 'btn btn-sm btn-outline-danger',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            className: 'btn btn-sm btn-outline-dark',
+                            exportOptions: {
+                                columns: ':not(:last-child)'
+                            }
+                        }
+                    ],
+                    language: {
+                        search: "Search:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoEmpty: "Showing 0 to 0 of 0 entries",
+                        infoFiltered: "(filtered from _MAX_ total entries)",
+                        zeroRecords: "No matching services found",
+                        paginate: {
+                            first: "First",
+                            last: "Last",
+                            next: "Next",
+                            previous: "Previous"
+                        }
+                    },
+                    order: [[0, 'desc']],
+                    pageLength: 10,
+                    lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                    columnDefs: [
+                        {
+                            targets: [1, 8], // Image and Actions columns
+                            orderable: false,
+                            searchable: false
+                        }
+                    ]
+                });
 
-        // SweetAlert for delete confirmation
-        $('.delete-btn').on('click', function(e) {
-            e.preventDefault();
-            const form = $(this).closest('form');
-            const serviceName = $(this).data('service-name');
-            
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `You are about to delete "${serviceName}". This action cannot be undone!`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'Cancel',
-                reverseButtons: true,
-                customClass: {
-                    confirmButton: 'btn btn-danger',
-                    cancelButton: 'btn btn-secondary'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
+                // SweetAlert for delete confirmation
+                $('.delete-btn').on('click', function(e) {
+                    e.preventDefault();
+                    const form = $(this).closest('form');
+                    const serviceName = $(this).data('service-name');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: `You are about to delete "${serviceName}". This action cannot be undone!`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'btn btn-danger',
+                            cancelButton: 'btn btn-secondary'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+
+                // Show success message
+                @if(session('success'))
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: '{{ session('success') }}',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                @endif
+
+                // Show error message
+                @if(session('error'))
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: '{{ session('error') }}',
+                        timer: 4000,
+                        showConfirmButton: true
+                    });
+                @endif
+
+                // Show warning message
+                @if(session('warning'))
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: '{{ session('warning') }}',
+                        timer: 4000
+                    });
+                @endif
+
+                // Show info message
+                @if(session('info'))
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Information',
+                        text: '{{ session('info') }}',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                @endif
             });
-        });
 
-        // Show success message
-        @if(session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: '{{ session('success') }}',
-                timer: 3000,
-                showConfirmButton: false,
-                toast: true,
-                position: 'top-end'
-            });
-        @endif
-
-        // Show error message
-        @if(session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: '{{ session('error') }}',
-                timer: 4000,
-                showConfirmButton: true
-            });
-        @endif
-
-        // Show warning message
-        @if(session('warning'))
-            Swal.fire({
-                icon: 'warning',
-                title: 'Warning!',
-                text: '{{ session('warning') }}',
-                timer: 4000
-            });
-        @endif
-
-        // Show info message
-        @if(session('info'))
-            Swal.fire({
-                icon: 'info',
-                title: 'Information',
-                text: '{{ session('info') }}',
-                timer: 3000,
-                showConfirmButton: false
-            });
-        @endif
-    });
-
-    // Global delete confirmation function
-    function confirmDelete(serviceName, formId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: `You are about to delete "${serviceName}". This action cannot be undone!`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById(formId).submit();
+            // Global delete confirmation function
+            function confirmDelete(serviceName, formId) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `You are about to delete "${serviceName}". This action cannot be undone!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById(formId).submit();
+                    }
+                });
             }
-        });
-    }
 </script>
 @endpush
 

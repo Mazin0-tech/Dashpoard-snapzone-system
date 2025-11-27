@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class ContactuiController extends Controller
@@ -10,10 +11,11 @@ class ContactuiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+        public function index()
+        {
+            $contact = Contact::first();
+            return view('front.contact.index', compact('contact'));
+        }
 
     /**
      * Show the form for creating a new resource.

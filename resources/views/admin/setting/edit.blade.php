@@ -1,4 +1,4 @@
-@extends('admin.index')
+@extends('layouts.admin')
 
 @section('content')
 
@@ -50,8 +50,8 @@
                         <div class="card-title">
                             Edit Website Settings
                         </div>
-                        <a href="{{ route('settings.index') }}" class="btn btn-sm btn-outline-secondary">
-                            <i class="fa fa-arrow-left"></i> Back to Settings
+                        <a href="{{ route('admin') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa fa-arrow-left"></i> Back
                         </a>
                     </div>
                     <div class="card-body">
@@ -140,7 +140,6 @@
                                     <div class="form-text">Comma separated keywords for SEO</div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 {{-- Logo --}}
                                 <div class="col-md-6 mb-3">
@@ -166,6 +165,34 @@
                                     <div class="image-preview mt-2" id="logoPreview" style="display: none;">
                                         <small class="text-muted">New Logo Preview:</small>
                                         <img src="" alt="New Logo Preview" class="img-thumbnail mt-1">
+                                    </div>
+                                </div>
+
+                                {{-- Dark Logo --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="dark_logo" class="form-label">Dark Mode Logo</label>
+                                    <input type="file" class="form-control @error('dark_logo') is-invalid @enderror"
+                                        id="dark_logo" name="dark_logo"
+                                        accept="image/jpeg,image/png,image/jpg,image/gif,image/svg+xml,image/webp">
+                                    @error('dark_logo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div class="form-text">Recommended: PNG, SVG, or WebP. Max size: 2MB</div>
+
+                                    @if($setting->dark_logo)
+                                    <div class="mt-2">
+                                        <small class="text-muted">Current Dark Logo:</small>
+                                        <div class="image-preview">
+                                            <img src="{{ $setting->dark_logo }}" alt="Current Dark Logo"
+                                                class="current-image">
+                                        </div>
+                                    </div>
+                                    @endif
+
+                                    <!-- New Dark Logo Preview -->
+                                    <div class="image-preview mt-2" id="darkLogoPreview" style="display: none;">
+                                        <small class="text-muted">New Dark Logo Preview:</small>
+                                        <img src="" alt="New Dark Logo Preview" class="img-thumbnail mt-1">
                                     </div>
                                 </div>
 
@@ -268,7 +295,7 @@
                                     <label for="tiktok" class="form-label">TikTok</label>
                                     <input type="url" class="form-control @error('tiktok') is-invalid @enderror"
                                         id="tiktok" name="tiktok" value="{{ old('tiktok', $setting->tiktok) }}"
-                                        placeholder="https://tiktok.com/@yourpage">
+                                        placeholder="https://tiktok.com/yourpage">
                                     @error('tiktok')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -308,71 +335,94 @@
 @push('js')
 <script>
     $(document).ready(function() {
-        // Logo preview
-        $('#logo').on('change', function(e) {
+               // Logo Preview
+            $('#logo').on('change', function(e) {
             const file = e.target.files[0];
             const preview = $('#logoPreview');
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.show();
-                    preview.find('img').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(file);
-                
-                // Validate file size
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Logo size must be less than 2MB');
-                    $(this).val('');
-                    preview.hide();
-                }
-            } else {
-                preview.hide();
-            }
-        });
 
-        // Favicon preview
-        $('#favicon').on('change', function(e) {
+            if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+            preview.show();
+            preview.find('img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+
+            // Validate file size
+            if (file.size > 2 * 1024 * 1024) {
+            alert('Logo size must be less than 2MB');
+            $(this).val('');
+            preview.hide();
+            }
+            } else {
+            preview.hide();
+            }
+            });
+
+            // Dark Logo Preview
+            $('#dark_logo').on('change', function(e) {
+            const file = e.target.files[0];
+            const preview = $('#darkLogoPreview');
+
+            if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+            preview.show();
+            preview.find('img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+
+            // Validate file size
+            if (file.size > 2 * 1024 * 1024) {
+            alert('Dark logo size must be less than 2MB');
+            $(this).val('');
+        preview.hide();
+            }
+            } else {
+            preview.hide();
+            }
+            });
+
+            // Favicon Preview
+            $('#favicon').on('change', function(e) {
             const file = e.target.files[0];
             const preview = $('#faviconPreview');
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.show();
-                    preview.find('img').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(file);
-                
-                // Validate file size
-                if (file.size > 1 * 1024 * 1024) {
-                    alert('Favicon size must be less than 1MB');
-                    $(this).val('');
-                    preview.hide();
-                }
-            } else {
-                preview.hide();
-            }
-        });
 
-        // Form validation
-        $('#settingsForm').on('submit', function(e) {
-            const siteName = $('#site_name').val().trim();
-            const title = $('#title').val().trim();
-            const address = $('#address').val().trim();
-            const meta = $('#meta').val().trim();
-            const keywords = $('#keywords').val().trim();
-            
-            if (!siteName || !title || !address || !meta || !keywords) {
-                e.preventDefault();
-                alert('Please fill in all required fields');
-                return false;
+            if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+            preview.show();
+            preview.find('img').attr('src', e.target.result);
             }
-            
-            return true;
-        });
-    });
+            reader.readAsDataURL(file);
+
+            // Validate file size
+            if (file.size > 1 * 1024 * 1024) {
+            alert('Favicon size must be less than 1MB');
+            $(this).val('');
+            preview.hide();
+            }
+            } else {
+            preview.hide();
+            }
+            });
+                // Form validation
+                $('#settingsForm').on('submit', function(e) {
+                    const siteName = $('#site_name').val().trim();
+                    const title = $('#title').val().trim();
+                    const address = $('#address').val().trim();
+                    const meta = $('#meta').val().trim();
+                    const keywords = $('#keywords').val().trim();
+
+                    if (!siteName || !title || !address || !meta || !keywords) {
+                        e.preventDefault();
+                        alert('Please fill in all required fields');
+                        return false;
+                    }
+
+                    return true;
+                });
+            });
 </script>
 @endpush
 

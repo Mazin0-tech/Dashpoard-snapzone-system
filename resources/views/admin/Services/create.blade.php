@@ -165,109 +165,109 @@
 
 <script>
     $(document).ready(function () {
-            // Initialize Summernote for description
-            $('#descriptionEditor').summernote({
-                height: 200,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ],
-                callbacks: {
-                    onInit: function() {
-                        // Set required attribute for the hidden textarea
-                        $('#descriptionEditor').attr('required', 'required');
-                    }
-                }
-            });
-
-            // Initialize Summernote for short description
-            $('#shortDescriptionEditor').summernote({
-                height: 150,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['view', ['fullscreen', 'codeview']]
-                ],
-                callbacks: {
-                    onChange: function(contents) {
-                        // Limit short description to 500 characters
-                        var plainText = $(contents).text();
-                        if (plainText.length > 500) {
-                            $('#shortDescriptionEditor').summernote('code', contents.substring(0, 500));
-                            alert('Short description cannot exceed 500 characters');
+                    // Initialize Summernote for description
+                    $('#descriptionEditor').summernote({
+                        height: 200,
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'italic', 'underline', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['view', ['fullscreen', 'codeview', 'help']]
+                        ],
+                        callbacks: {
+                            onInit: function() {
+                                // Set required attribute for the hidden textarea
+                                $('#descriptionEditor').attr('required', 'required');
+                            }
                         }
-                    }
-                }
-            });
+                    });
 
-            // Image preview functionality
-            $('#image').on('change', function(e) {
-                const file = e.target.files[0];
-                const preview = $('#imagePreview');
-                
-                if (file) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        preview.show();
-                        preview.find('img').attr('src', e.target.result);
-                    }
-                    
-                    reader.readAsDataURL(file);
-                    
-                    // Validate file size (2MB)
-                    if (file.size > 2 * 1024 * 1024) {
-                        alert('File size must be less than 2MB');
-                        $(this).val('');
-                        preview.hide();
-                    }
-                } else {
-                    preview.hide();
-                }
-            });
+                    // Initialize Summernote for short description
+                    $('#shortDescriptionEditor').summernote({
+                        height: 150,
+                        toolbar: [
+                            ['style', ['style']],
+                            ['font', ['bold', 'italic', 'underline', 'clear']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['view', ['fullscreen', 'codeview']]
+                        ],
+                        callbacks: {
+                            onChange: function(contents) {
+                                // Limit short description to 500 characters
+                                var plainText = $(contents).text();
+                                if (plainText.length > 500) {
+                                    $('#shortDescriptionEditor').summernote('code', contents.substring(0, 500));
+                                    alert('Short description cannot exceed 500 characters');
+                                }
+                            }
+                        }
+                    });
 
-            // Update end date min attribute when start date changes
-            $('#start_date').on('change', function() {
-                $('#end_date').attr('min', $(this).val());
-            });
+                    // Image preview functionality
+                    $('#image').on('change', function(e) {
+                        const file = e.target.files[0];
+                        const preview = $('#imagePreview');
 
-            // Form validation
-            $('#serviceForm').on('submit', function(e) {
-                const title = $('#title').val().trim();
-                const industry = $('#industry').val().trim();
-                const description = $('#descriptionEditor').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
-                
-                if (!title) {
-                    e.preventDefault();
-                    alert('Please enter a title');
-                    $('#title').focus();
-                    return false;
-                }
-                
-                if (!industry) {
-                    e.preventDefault();
-                    alert('Please enter an industry');
-                    $('#industry').focus();
-                    return false;
-                }
-                
-                if (!description) {
-                    e.preventDefault();
-                    alert('Please enter a description');
-                    $('#descriptionEditor').summernote('focus');
-                    return false;
-                }
-                
-                return true;
-            });
-        });
+                        if (file) {
+                            const reader = new FileReader();
+
+                            reader.onload = function(e) {
+                                preview.show();
+                                preview.find('img').attr('src', e.target.result);
+                            }
+
+                            reader.readAsDataURL(file);
+
+                            // Validate file size (2MB)
+                            if (file.size > 2 * 1024 * 1024) {
+                                alert('File size must be less than 2MB');
+                                $(this).val('');
+                                preview.hide();
+                            }
+                        } else {
+                            preview.hide();
+                        }
+                    });
+
+                    // Update end date min attribute when start date changes
+                    $('#start_date').on('change', function() {
+                        $('#end_date').attr('min', $(this).val());
+                    });
+
+                    // Form validation
+                    $('#serviceForm').on('submit', function(e) {
+                        const title = $('#title').val().trim();
+                        const industry = $('#industry').val().trim();
+                        const description = $('#descriptionEditor').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
+
+                        if (!title) {
+                            e.preventDefault();
+                            alert('Please enter a title');
+                            $('#title').focus();
+                            return false;
+                        }
+
+                        if (!industry) {
+                            e.preventDefault();
+                            alert('Please enter an industry');
+                            $('#industry').focus();
+                            return false;
+                        }
+
+                        if (!description) {
+                            e.preventDefault();
+                            alert('Please enter a description');
+                            $('#descriptionEditor').summernote('focus');
+                            return false;
+                        }
+
+                        return true;
+                    });
+                });
 </script>
 @endpush
 

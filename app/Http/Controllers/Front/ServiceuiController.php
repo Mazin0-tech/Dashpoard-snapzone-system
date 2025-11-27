@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class ServiceuiController extends Controller
@@ -12,7 +13,8 @@ class ServiceuiController extends Controller
      */
     public function index()
     {
-        //
+        $services = Service::latest()->paginate(6);
+        return view('front.service.index', compact('services'));    
     }
 
     /**
@@ -36,7 +38,8 @@ class ServiceuiController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $service = Service::with('faqs')->findOrFail($id);
+        return view('front.service.show', compact('service'));
     }
 
     /**

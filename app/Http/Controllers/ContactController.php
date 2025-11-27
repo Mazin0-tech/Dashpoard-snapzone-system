@@ -8,18 +8,11 @@ use Illuminate\Http\Request;
 class ContactController extends Controller
 {
 
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
-    /**
-     * عرض قائمة جهات الاتصال
-     */
-    public function index()
-    {
-        $contacts = Contact::latest()->get();
-        return view('admin.Contact.index', compact('contacts'));
-    }
+
     /**
      * عرض نموذج تعديل جهة اتصال
      */

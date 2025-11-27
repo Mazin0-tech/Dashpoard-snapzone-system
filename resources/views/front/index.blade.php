@@ -14,7 +14,7 @@
       </div>
       <div class="cta-box">
         <div class="hero-btn">
-          <a href="{{ route ('contact.index') }}" class="circle-btn circle-btn-anim">
+          <a href="{{ route('contact.index') }}" class="circle-btn circle-btn-anim">
             <span class="text text-uppercase">
               Start
               <i class="flaticon-up-right-arrow"></i>
@@ -35,7 +35,7 @@
         <div class="ak-slider partners-logos-slider">
           <div class="swiper-wrapper">
             @if($partners->count() > 0)
-            @foreach ( $partners as $partner )
+            @foreach ($partners as $partner)
 
             <div class="swiper-slide mr-2 pr-2">
               <div class="client-logo style2">

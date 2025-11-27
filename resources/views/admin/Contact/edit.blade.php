@@ -10,7 +10,7 @@
             <div class="ms-md-1 ms-0">
                 <nav>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{{ route('contact.index') }}">Contacts</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin') }}">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Edit Contact</li>
                     </ol>
                 </nav>
@@ -27,8 +27,8 @@
                             Edit Contact - {{ $contact->name }}
                         </div>
                         <div class="card-options">
-                            <a href="{{ route('contact.index') }}" class="btn btn-sm btn-outline-secondary">
-                                <i class="fa fa-arrow-left"></i> Back to Contacts
+                            <a href="{{ route('admin') }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fa fa-arrow-left"></i> Back 
                             </a>
                         </div>
                     </div>
@@ -190,77 +190,77 @@
 
 <script>
     // Sweet Alert for form submission
-   document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('updateForm');
-      const submitBtn = document.getElementById('updateBtn');
+       document.addEventListener('DOMContentLoaded', function() {
+          const form = document.getElementById('updateForm');
+          const submitBtn = document.getElementById('updateBtn');
 
-      form.addEventListener('submit', function(e) {
-         e.preventDefault();
-         
-         Swal.fire({
-            title: 'Are you sure?',
-            text: "You are about to update this contact information!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, update it!',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-         }).then((result) => {
-            if (result.isConfirmed) {
-               // Show loading state
-               submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Updating...';
-               submitBtn.disabled = true;
-               
-               // Submit the form
-               form.submit();
-            }
-         });
-      });
+          form.addEventListener('submit', function(e) {
+             e.preventDefault();
 
-      // Character counter for message field
-      const messageField = document.getElementById('message');
-      const charCount = document.createElement('div');
-      charCount.className = 'form-text text-end';
-      messageField.parentNode.appendChild(charCount);
+             Swal.fire({
+                title: 'Are you sure?',
+                text: "You are about to update this contact information!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+             }).then((result) => {
+                if (result.isConfirmed) {
+                   // Show loading state
+                   submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Updating...';
+                   submitBtn.disabled = true;
 
-      function updateCharCount() {
-         const length = messageField.value.length;
-         charCount.textContent = `${length} characters`;
-         
-         if (length > 1000) {
-            charCount.className = 'form-text text-end text-danger';
-         } else if (length > 500) {
-            charCount.className = 'form-text text-end text-warning';
-         } else {
-            charCount.className = 'form-text text-end text-success';
-         }
-      }
+                   // Submit the form
+                   form.submit();
+                }
+             });
+          });
 
-      messageField.addEventListener('input', updateCharCount);
-      updateCharCount(); // Initial count
-   });
+          // Character counter for message field
+          const messageField = document.getElementById('message');
+          const charCount = document.createElement('div');
+          charCount.className = 'form-text text-end';
+          messageField.parentNode.appendChild(charCount);
 
-   // Show success message if coming from update
-   @if(session('success'))
-      Swal.fire({
-         icon: 'success',
-         title: 'Success!',
-         text: '{{ session('success') }}',
-         timer: 3000,
-         showConfirmButton: false
-      });
-   @endif
+          function updateCharCount() {
+             const length = messageField.value.length;
+             charCount.textContent = `${length} characters`;
 
-   // Show error message if any
-   @if(session('error'))
-      Swal.fire({
-         icon: 'error',
-         title: 'Error!',
-         text: '{{ session('error') }}',
-         timer: 4000
-      });
-   @endif
+             if (length > 1000) {
+                charCount.className = 'form-text text-end text-danger';
+             } else if (length > 500) {
+                charCount.className = 'form-text text-end text-warning';
+             } else {
+                charCount.className = 'form-text text-end text-success';
+             }
+          }
+
+          messageField.addEventListener('input', updateCharCount);
+          updateCharCount(); // Initial count
+       });
+
+       // Show success message if coming from update
+       @if(session('success'))
+          Swal.fire({
+             icon: 'success',
+             title: 'Success!',
+             text: '{{ session('success') }}',
+             timer: 3000,
+             showConfirmButton: false
+          });
+       @endif
+
+       // Show error message if any
+       @if(session('error'))
+          Swal.fire({
+             icon: 'error',
+             title: 'Error!',
+             text: '{{ session('error') }}',
+             timer: 4000
+          });
+       @endif
 </script>
 @endpush

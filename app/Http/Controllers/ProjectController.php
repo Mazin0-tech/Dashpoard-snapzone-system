@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-        public function __construct()
+    public function __construct()
     {
         $this->middleware('auth');
     }
@@ -68,18 +68,18 @@ class ProjectController extends Controller
         if ($request->hasFile('gallery')) {
             $order = 1;
             $featuredIndex = $request->featured_image_index ?? 0;
-            
+
             foreach ($request->file('gallery') as $index => $file) {
                 $galleryName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('images/gallery'), $galleryName);
-                
+
                 Gallery::create([
                     'project_id' => $project->id,
                     'image' => url('images/gallery/' . $galleryName),
                     'order' => $order,
                     'is_featured' => ($index == $featuredIndex)
                 ]);
-                
+
                 $order++;
             }
         }
@@ -92,10 +92,12 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        $project = Project::with(['galleries' => function($query) {
-            $query->orderBy('order', 'asc');
-        }])->findOrFail($id);
-        
+        $project = Project::with([
+            'galleries' => function ($query) {
+                $query->orderBy('order', 'asc');
+            }
+        ])->findOrFail($id);
+
         $services = Service::all();
 
         return view('admin.Projects.edit', compact('project', 'services'));
@@ -145,18 +147,18 @@ class ProjectController extends Controller
             $existingGalleriesCount = $project->galleries()->count();
             $order = $existingGalleriesCount + 1;
             $featuredIndex = $request->featured_image_index ?? 0;
-            
+
             foreach ($request->file('gallery') as $index => $file) {
                 $galleryName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('images/gallery'), $galleryName);
-                
+
                 Gallery::create([
                     'project_id' => $project->id,
                     'image' => url('images/gallery/' . $galleryName),
                     'order' => $order,
                     'is_featured' => ($index == $featuredIndex)
                 ]);
-                
+
                 $order++;
             }
         }
@@ -204,7 +206,7 @@ class ProjectController extends Controller
     public function deleteGallery($id)
     {
         $gallery = Gallery::findOrFail($id);
-        
+
         // Delete image file
         if ($gallery->image) {
             $imagePath = public_path('images/gallery/' . basename($gallery->image));
@@ -212,9 +214,9 @@ class ProjectController extends Controller
                 unlink($imagePath);
             }
         }
-        
+
         $gallery->delete();
-        
+
         return response()->json(['success' => 'Gallery image deleted successfully.']);
     }
 
@@ -240,13 +242,13 @@ class ProjectController extends Controller
     public function toggleFeatured($id)
     {
         $gallery = Gallery::findOrFail($id);
-        
+
         // Reset all featured images for this project
         Gallery::where('project_id', $gallery->project_id)->update(['is_featured' => false]);
-        
+
         // Set this image as featured
         $gallery->update(['is_featured' => true]);
-        
+
         return response()->json(['success' => 'Featured image updated successfully.']);
     }
 }
