@@ -118,6 +118,7 @@
                                     <th>Client</th>
                                     <th>Service</th>
                                     <th>Project Link</th>
+                                    <th>3D Model</th>
                                     <th>Gallery</th>
                                     <th>Slider Type</th>
                                     <th>Actions</th>
@@ -167,6 +168,16 @@
                                         @endif
                                     </td>
                                     <td>
+                                        @if($project->model_link)
+                                        <a href="{{ $project->model_link }}" class="btn btn-outline-secondary btn-sm"
+                                            target="_blank">
+                                            <i class="fa fa-cube"></i> View 3D Model
+                                        </a>
+                                        @else
+                                        <span class="text-muted">N/A</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         @if($project->galleries->count() > 0)
                                         <div class="gallery-thumbnails">
                                             @foreach($project->galleries->take(3) as $gallery)
@@ -194,11 +205,6 @@
                                             <a href="{{ route('project.edit', $project->id) }}"
                                                 class="btn btn-primary btn-sm" title="Edit Project">
                                                 <i class="fa-solid fa-pen-to-square"></i>
-                                            </a>
-
-                                            <a href="{{ route('project.show', $project->id) }}"
-                                                class="btn btn-info btn-sm" title="View Details">
-                                                <i class="fa-solid fa-eye"></i>
                                             </a>
 
                                             <form method="POST" action="{{ route('project.destroy', $project->id) }}"

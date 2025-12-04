@@ -254,57 +254,95 @@ kbd {
 ----------------------------------------------------------------*/
 .preloader {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
   background: var(--white-color);
   z-index: 99999999;
   overflow: hidden;
-  transform: translateY(0);
-}
-.preloader .txt-loading {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* MAIN TEXT AREA */
+.preloader .txt-loading {
+  display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
+  align-items: center;
+  text-align: center;
   color: var(--black-color);
   font-size: 160px;
   font-weight: 700;
-}
-.preloader .txt-loading .preloader-text {
-  text-align: center;
-  max-width: 800px;
+  line-height: 1;
   width: 100%;
+  padding: 0 20px;
 }
+
+/* SVG WRAPPER */
+.preloader .txt-loading .preloader-text {
+  width: 100%;
+  max-width: 900px;
+}
+
 .preloader .txt-loading .preloader-text .preloader-text-svg {
   width: 80%;
   max-width: 900px;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
+
+/* SVG TEXT LINES */
 .preloader .txt-loading .preloader-text .preloader-text-svg .svg-text {
   fill: none;
   stroke: var(--black-color);
   stroke-width: 1;
-  font-size: 200px;
   opacity: 0;
-  transform: translate(150px, 200px);
+  font-size: 150px;
   font-family: "Instrument", sans-serif !important;
-  background: var(--white-color);
+  transform: translateY(150px);
 }
+
+/* LOADING PERCENT */
 .preloader .txt-loading .loading-percent {
   margin-top: 1rem;
   font-size: 18px;
+  color: var(--black-color);
 }
 
+/* RESPONSIVE */
 @media screen and (max-width: 991px) {
   .preloader .txt-loading {
-    font-size: 42px;
+    font-size: 60px;
   }
+
   .preloader .txt-loading .loading-percent {
     font-size: 16px;
+  }
+
+  .preloader .txt-loading .preloader-text .preloader-text-svg .svg-text {
+    font-size: 120px;
+    transform: translateY(40px);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .preloader .txt-loading {
+    font-size: 38px;
+  }
+
+  .preloader .txt-loading .preloader-text .preloader-text-svg {
+    width: 95%;
+  }
+
+  .preloader .txt-loading .preloader-text .preloader-text-svg .svg-text {
+    font-size: 80px;
+    transform: translateY(10px);
+  }
+
+  .preloader .txt-loading .loading-percent {
+    font-size: 14px;
   }
 }
 /*--------------------------------------------------------------
@@ -5157,8 +5195,8 @@ kbd {
 .service-card .service-hover-img {
   position: absolute;
   left: 35%;
-  width: auto;
-  max-height: 280px;
+  max-width: 380px;
+  max-height: 380px;
   height: 100%;
   bottom: 0;
   z-index: 11;

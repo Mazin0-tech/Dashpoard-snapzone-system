@@ -9,7 +9,6 @@
 @endpush
 
 <!-- Start Breadcrumb -->
-<div class="ak-height-150 ak-height-lg-120"></div>
 <div class="breadcrumb-area">
   <div class="container">
     <div class="breadcrumb-wapper style-2">
@@ -30,22 +29,28 @@
         </div>
       </div>
       <div>
-        <div class="breadcrumb-cricle">
-          <div class="cricle-animated-text">
-            <div class="rounded-text rotating">
-              <svg viewBox="0 0 200 200">
-                <path id="textPath" d="M 85,0 A 85,85 0 0 1 -85,0 A 85,85 0 0 1 85,0" transform="translate(100,100)"
-                  fill="none" stroke-width="0"></path>
-                <g font-size="22.1px">
-                  <text text-anchor="start">
-                    <textPath class="coloring" xlink:href="#textPath" startOffset="0%">
-                      DIGITAL PRESENCE CREATIVITY & INNOVATION I N &nbsp;
-                    </textPath>
-                  </text>
-                </g>
-              </svg>
+       <div class="breadcrumb-img-box">
+          <video autoplay="" muted="" loop="">
+            <source src="{{ asset ('front/videos/markag-video.mp4')}}" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div class="breadcrumb-cricle">
+            <div class="cricle-animated-text">
+              <div class="rounded-text rotating">
+                <svg viewBox="0 0 200 200">
+                  <path id="textPath" d="M 85,0 A 85,85 0 0 1 -85,0 A 85,85 0 0 1 85,0" transform="translate(100,100)"
+                    fill="none" stroke-width="0"></path>
+                  <g font-size="22.1px">
+                    <text text-anchor="start">
+                      <textPath class="coloring" xlink:href="#textPath" startOffset="0%">
+                        DIGITAL PRESENCE CREATIVITY & INNOVATION I N &nbsp;
+                      </textPath>
+                    </text>
+                  </g>
+                </svg>
+              </div>
+              <div class="cricle-ceneter-text"></div>
             </div>
-            <div class="cricle-ceneter-text"></div>
           </div>
         </div>
       </div>
@@ -72,20 +77,29 @@
 
 <!-- Start Services -->
 
-<div class="ak-height-100 ak-height-lg-30"></div>
-<section>
+<section class="service-bg">
   <div class="container">
     <div class="service-content">
       @foreach($services as $index => $service)
-      <div class="service-card fade-animation pb-3" data-direction="bottom">
+      <div class="service-card fade-animation" data-direction="bottom">
+        <!-- صورة الخدمة من قاعدة البيانات -->
+        @if($service->image)
         <img class="service-hover-img" src="{{ asset($service->image) }}" alt="{{ $service->title }}" />
+        @else
+        <!-- صورة افتراضية إذا لم توجد صورة -->
+        <img class="service-hover-img" src="{{ asset('front/img/services/services-hover-' . ($index + 1) . '.png') }}"
+          alt="{{ $service->title }}" />
+        @endif
+
         <div class="service-card-item style-1">
-        <div class="service-left-info d-flex align-items-center">
-          <h4 class="service-title">{{ $service->title }}</h4>
-        </div>
+          <div class="service-left-info d-flex align-items-center">
+            <h4 class="service-title">{{ $service->title }}</h4>
+          </div>
           <div class="service-left-right">
             <p class="service-desp">
-              {!! Str::limit($service->description, 150, '...') !!}
+              {!! $service->shortdescription ?? 'Lorem Ipsum is simply dummy text of the printing and typesetting
+              industry.
+              Lorem Ipsum has been industry and typesetting.' !!}
             </p>
             <div class="service-btn-content">
               <a href="{{ route('servicefront.show', $service->id) }}" class="more-btn">
@@ -98,58 +112,11 @@
             </div>
           </div>
         </div>
-        <div class="service-stroke-number ak-stroke-number">
-          {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
-        </div>
+        <div class="service-stroke-number ak-stroke-number">{{ sprintf('%02d', $index + 1) }}</div>
       </div>
       @endforeach
     </div>
-
-    <!-- Pagination -->
-    @if($services->hasPages())
-    <div class="ak-height-75 ak-height-lg-50"></div>
-    <div class="d-flex justify-content-center">
-      <nav aria-label="Services pagination">
-        <ul class="pagination">
-          {{-- Previous Page Link --}}
-          @if ($services->onFirstPage())
-          <li class="page-item disabled">
-            <span class="page-link">Previous</span>
-          </li>
-          @else
-          <li class="page-item">
-            <a class="page-link" href="{{ $services->previousPageUrl() }}" rel="prev">Previous</a>
-          </li>
-          @endif
-
-          {{-- Pagination Elements --}}
-          @foreach ($services->getUrlRange(1, $services->lastPage()) as $page => $url)
-          @if ($page == $services->currentPage())
-          <li class="page-item active">
-            <span class="page-link">{{ $page }}</span>
-          </li>
-          @else
-          <li class="page-item">
-            <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-          </li>
-          @endif
-          @endforeach
-
-          {{-- Next Page Link --}}
-          @if ($services->hasMorePages())
-          <li class="page-item">
-            <a class="page-link" href="{{ $services->nextPageUrl() }}" rel="next">Next</a>
-          </li>
-          @else
-          <li class="page-item disabled">
-            <span class="page-link">Next</span>
-          </li>
-          @endif
-        </ul>
-      </nav>
-    </div>
-    @endif
-  </div>
+    <div class="ak-height-150 ak-height-lg-80"></div>
 </section>
 <!-- End Services -->
 <!-- End Services -->
@@ -216,6 +183,6 @@
 </section>
 <!-- End CTA Section -->
 
-<div class="ak-height-150 ak-height-lg-80"></div>
+<div class="ak-height-100 ak-height-lg-40"></div>
 
 @endsection

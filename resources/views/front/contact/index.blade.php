@@ -3,7 +3,6 @@
 @section('content')
 
 <!-- Start Breadcrumb -->
-<div class="ak-height-150 ak-height-lg-120"></div>
 <div class="breadcrumb-area style-2">
   <div class="container">
     <div class="breadcrumb-wapper style-2">
@@ -121,14 +120,14 @@
         </div>
         <h3 class="contact-title">Phone</h3>
         @if(!empty($contact->phone))
-            <p class="contact-text">{!! nl2br(e($contact->phone)) !!}</p>
-            @endif
-            @if(!empty($contact->phone2))
-            <p class="contact-text">{!! nl2br(e($contact->phone2)) !!}</p>
-            @endif
-            @if(!empty($contact->phone3))
-            <p class="contact-text">{!! nl2br(e($contact->phone3)) !!}</p>
-            @endif
+        <p class="contact-text">{!! nl2br(e($contact->phone)) !!}</p>
+        @endif
+        @if(!empty($contact->phone2))
+        <p class="contact-text">{!! nl2br(e($contact->phone2)) !!}</p>
+        @endif
+        @if(!empty($contact->phone3))
+        <p class="contact-text">{!! nl2br(e($contact->phone3)) !!}</p>
+        @endif
       </div>
       <div class="contact-card">
         <div class="contact-icon email">

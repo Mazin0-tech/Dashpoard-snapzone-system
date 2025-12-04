@@ -2,6 +2,22 @@
 
 @section('content')
 
+@push('css')
+<style>
+  .client-logo.style2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .client-logo.style2 img {
+    width: 100px;
+
+    object-fit: contain;
+  }
+</style>
+@endpush
+
 <!-- Start Hero -->
 <section class="container container-customize">
   <div class="digital-agencye-hero style-1">
@@ -14,7 +30,7 @@
       </div>
       <div class="cta-box">
         <div class="hero-btn">
-          <a href="{{ route('contact.index') }}" class="circle-btn circle-btn-anim">
+          <a href="{{ route('contactfront.index') }}" class="circle-btn circle-btn-anim">
             <span class="text text-uppercase">
               Start
               <i class="flaticon-up-right-arrow"></i>
@@ -30,32 +46,38 @@
         </p>
       </div>
       <div class="partners-section">
-        <div class="da-shape-line"></div>
+        {{-- <div class="da-shape-line"></div> --}}
         <h6 class="partners-title">Our Trusted Partner</h6>
+
         <div class="ak-slider partners-logos-slider">
           <div class="swiper-wrapper">
+
             @if($partners->count() > 0)
             @foreach ($partners as $partner)
-
-            <div class="swiper-slide mr-2 pr-2">
+            <div class="swiper-slide">
               <div class="client-logo style2">
                 <img src="{{ $partner->logo }}" alt="{{ $partner->title }}" />
-                {{-- <div class="client-info">
+
+                <div class="client-info">
                   <h6 class="client-title">{{ $partner->title }}</h6>
-                </div> --}}
+                  <p class="client-shot-title mt-2">Trusted Partner</p>
+                </div>
+
               </div>
             </div>
             @endforeach
             @else
+
             <div class="swiper-slide">
               <div class="client-logo style2">
-                <img src="assets/img/client/client-1.png" alt="" />
+                <img src="{{ asset('front/img/client/client-1.png') }}" alt="" />
                 <div class="client-info">
                   <h6 class="client-title">Credesign</h6>
                   <p class="client-shot-title">Portfolio Template</p>
                 </div>
               </div>
             </div>
+
             <div class="swiper-slide">
               <div class="client-logo style2">
                 <img src="{{ asset('front/img/client/client-2.png') }}" alt="" />
@@ -65,6 +87,7 @@
                 </div>
               </div>
             </div>
+
             <div class="swiper-slide">
               <div class="client-logo style2">
                 <img src="{{ asset('front/img/client/client-3.png') }}" alt="" />
@@ -74,6 +97,7 @@
                 </div>
               </div>
             </div>
+
             <div class="swiper-slide">
               <div class="client-logo style2">
                 <img src="{{ asset('front/img/client/client-4.png') }}" alt="" />
@@ -83,12 +107,16 @@
                 </div>
               </div>
             </div>
+
             @endif
+
           </div>
         </div>
+
         <div class="partners-swiper-controller">
           <div class="partners-logs-scrollbar"></div>
           <div class="partners-logs-navigation">
+
             <div class="partners-logs-button-next hover-1">
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="10" viewBox="0 0 28 10" fill="none">
                 <g clip-path="url(#clip0_278989272_379)">
@@ -96,13 +124,9 @@
                     d="M0.716728 5.58228L6.17073 1.58728V5.24028L26.5947 5.58228L6.17073 5.92428V9.57728L0.716728 5.58228Z"
                     fill="#353535" />
                 </g>
-                <defs>
-                  <clipPath id="clip0_278989272_379">
-                    <rect width="27" height="9" fill="white" transform="matrix(-1 0 0 1 27.4551 0.949463)" />
-                  </clipPath>
-                </defs>
               </svg>
             </div>
+
             <div class="partners-logs-button-prev hover-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="28" height="10" viewBox="0 0 28 10" fill="none">
                 <g clip-path="url(#clip0_2221321372_376)">
@@ -110,13 +134,9 @@
                     d="M27.1934 5.58228L21.7394 1.58728V5.24028L1.31543 5.58228L21.7394 5.92428V9.57728L27.1934 5.58228Z"
                     fill="#353535" />
                 </g>
-                <defs>
-                  <clipPath id="clip0_2221321372_376">
-                    <rect width="27" height="9" fill="white" transform="translate(0.455078 0.949463)" />
-                  </clipPath>
-                </defs>
               </svg>
             </div>
+
           </div>
         </div>
       </div>
@@ -158,8 +178,8 @@
     </h3>
 
     <div class="fade-animation">
-      <a href="{{ route('about.index') }}" class="more-btn">
-        <span class="morebtn-text"> More AboutUs </span>
+      <a href="{{ route('aboutfront.index') }}" class="more-btn">
+        <span class="morebtn-text"> More About Us </span>
         <span class="primary-icon-anim">
           <i class="flaticon-up-right-arrow"></i>
           <i class="flaticon-up-right-arrow"></i>
@@ -201,7 +221,7 @@
           </div>
         </div>
       </div>
-
+      <div class="ak-height-150 ak-height-lg-80"></div>
       @foreach($services as $index => $service)
       <div class="service-card fade-animation" data-direction="bottom">
         <!-- صورة الخدمة من قاعدة البيانات -->
@@ -214,37 +234,17 @@
         @endif
 
         <div class="service-card-item style-1">
-          <div class="service-left-info">
+          <div class="service-left-info d-flex align-items-center">
             <h4 class="service-title">{{ $service->title }}</h4>
-            <ul class="service-lists">
-              <li class="service-list">
-                <span>
-                  <i class="flaticon-star-2"></i>
-                </span>
-                <span> Brand Research </span>
-              </li>
-              <li class="service-list">
-                <span>
-                  <i class="flaticon-star-2"></i>
-                </span>
-                <span> Competitor Analysis </span>
-              </li>
-              <li class="service-list">
-                <span>
-                  <i class="flaticon-star-2"></i>
-                </span>
-                <span> Design Structure </span>
-              </li>
-            </ul>
           </div>
           <div class="service-left-right">
             <p class="service-desp">
-              {{ $service->shortdescription ?? 'Lorem Ipsum is simply dummy text of the printing and typesetting
+              {!! $service->shortdescription ?? 'Lorem Ipsum is simply dummy text of the printing and typesetting
               industry.
-              Lorem Ipsum has been industry and typesetting.' }}
+              Lorem Ipsum has been industry and typesetting.' !!}
             </p>
             <div class="service-btn-content">
-              <a href="{{ route('service.show', $service->id) }}" class="more-btn">
+              <a href="{{ route('servicefront.show', $service->id) }}" class="more-btn">
                 <span class="morebtn-text"> Learn More </span>
                 <span class="primary-icon-anim">
                   <i class="flaticon-up-right-arrow"></i>
@@ -258,6 +258,7 @@
       </div>
       @endforeach
     </div>
+    <div class="ak-height-150 ak-height-lg-80"></div>
 </section>
 <!-- End Services -->
 
@@ -311,11 +312,12 @@
     <div class="d-flex flex-lg-column flex-column-reverse">
       <div class="portfolio-content-top">
         @foreach($projects->take(2) as $project)
-        <a href="{{ route('project.show', $project->id) }}" class="portfolio-card style-1">
+        <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card style-1">
           <div class="portfolio-img img-anim-left-show">
             <img src="{{ asset($project->image) }}" alt="{{ $project->title }}" />
           </div>
-          <div class="portfolio-info">
+          <div class="portfolio-info"
+            style="background-color: #410b00; color: white; padding: 15px; border-radius: 5px">
             <div class="portfolio-subtitle">{{ $project->service->title ?? 'Google Marketing' }}</div>
             <div class="portfolio-text style-1">
               <h4 class="portfolio-title">{{ $project->title }}</h4>
@@ -334,14 +336,15 @@
         <span class="highlight style-2">Projects</span>
       </h2>
       <div class="ak-height-lg-80"></div>
+
     </div>
     <div class="portfolio-content-bottom">
       @foreach($projects->slice(2) as $project)
-      <a href="{{ route('project.show', $project->id) }}" class="portfolio-card style-1 mb-0 mb-md-5">
+      <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card style-1 mb-0 mb-md-5">
         <div class="portfolio-img img-anim-left-show">
           <img src="{{ asset($project->image) }}" alt="{{ $project->title }}" />
         </div>
-        <div class="portfolio-info">
+        <div class="portfolio-info" style="background-color: #410b00; color: white; padding: 50px; border-radius: 10px">
           <div class="portfolio-subtitle">{{ $project->service->title ?? 'Google Marketing' }}</div>
           <div class="portfolio-text style-1">
             <h4 class="portfolio-title">{{ $project->title }}</h4>
@@ -459,7 +462,7 @@
     <div class="ak-height-75 ak-height-lg-50"></div>
     <div class="blogs-content fade-animation">
       @foreach($blogs as $blog)
-      <a href="{{ route('blog.show', $blog->id) }}" class="blog-card">
+      <a href="{{ route('blogfront.show', $blog->id) }}" class="blog-card">
         <div class="blog-image">
           <img src="{{ asset($blog->image) }}" alt="{{ $blog->title }}" />
         </div>

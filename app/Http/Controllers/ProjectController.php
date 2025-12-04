@@ -30,7 +30,6 @@ class ProjectController extends Controller
         $services = Service::all();
         return view('admin.Projects.create', compact('services'));
     }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -39,15 +38,16 @@ class ProjectController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'industry' => 'required|string|max:255',
             'date' => 'required|date',
             'service_id' => 'required|exists:services,id',
             'client' => 'nullable|string|max:255',
             'link_project' => 'nullable|url|max:255',
+            'model_link' => 'nullable',
             'slider_type' => 'nullable|boolean',
             'gallery' => 'nullable|array',
-            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
             'featured_image_index' => 'nullable|integer|min:0'
         ]);
 
@@ -60,7 +60,6 @@ class ProjectController extends Controller
             $image->move(public_path('images/projects'), $imageName);
             $input['image'] = url('images/projects/' . $imageName);
         }
-
         // Create project
         $project = Project::create($input);
 
@@ -115,11 +114,12 @@ class ProjectController extends Controller
             'date' => 'required|date',
             'service_id' => 'required|exists:services,id',
             'client' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'model_link' => 'nullable',
             'link_project' => 'nullable|url|max:255',
             'slider_type' => 'nullable|boolean',
             'gallery' => 'nullable|array',
-            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
             'featured_image_index' => 'nullable|integer|min:0'
         ]);
 
@@ -142,7 +142,7 @@ class ProjectController extends Controller
             $project->image = url('images/projects/' . $imageName);
         }
 
-        // Handle gallery images update
+           // Handle gallery images update
         if ($request->hasFile('gallery')) {
             $existingGalleriesCount = $project->galleries()->count();
             $order = $existingGalleriesCount + 1;
@@ -164,7 +164,7 @@ class ProjectController extends Controller
         }
 
         // Update other fields
-        $project->update($request->except('image', 'gallery', 'featured_image_index'));
+        $project->update($request->except('image', 'gallery', 'featured_image_index', '3d_model'));
 
         return redirect()->route('project.index')->with('success', 'Project updated successfully.');
     }
@@ -200,16 +200,14 @@ class ProjectController extends Controller
         return redirect()->route('project.index')->with('success', 'Project deleted successfully.');
     }
 
-    /**
-     * Delete a gallery image
-     */
-    public function deleteGallery($id)
+  public function deleteGallery(Request $request, $id)
     {
         $gallery = Gallery::findOrFail($id);
+        $projectId = $gallery->project_id; 
 
         // Delete image file
         if ($gallery->image) {
-            $imagePath = public_path('images/gallery/' . basename($gallery->image));
+            $imagePath = public_path($gallery->image);
             if (file_exists($imagePath)) {
                 unlink($imagePath);
             }
@@ -217,7 +215,28 @@ class ProjectController extends Controller
 
         $gallery->delete();
 
-        return response()->json(['success' => 'Gallery image deleted successfully.']);
+        // Redirect back to edit page with success message
+        return redirect()->route('project.edit', $projectId)
+            ->with('success', 'Image deleted successfully.');
+    }
+
+    /**
+     * Toggle featured image (طريقة الفورم العادية)
+     */
+    public function toggleFeatured(Request $request, $id)
+    {
+        $gallery = Gallery::findOrFail($id);
+
+        // Reset all featured images for this project
+        Gallery::where('project_id', $gallery->project_id)
+               ->update(['is_featured' => false]);
+
+        // Set this image as featured
+        $gallery->update(['is_featured' => true]);
+
+        // Redirect back to edit page
+        return redirect()->route('project.edit', $gallery->project_id)
+            ->with('success', 'Featured image updated successfully.');
     }
 
     /**
@@ -236,19 +255,5 @@ class ProjectController extends Controller
         return response()->json(['success' => 'Gallery order updated successfully.']);
     }
 
-    /**
-     * Toggle featured image
-     */
-    public function toggleFeatured($id)
-    {
-        $gallery = Gallery::findOrFail($id);
 
-        // Reset all featured images for this project
-        Gallery::where('project_id', $gallery->project_id)->update(['is_featured' => false]);
-
-        // Set this image as featured
-        $gallery->update(['is_featured' => true]);
-
-        return response()->json(['success' => 'Featured image updated successfully.']);
-    }
 }

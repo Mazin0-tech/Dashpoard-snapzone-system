@@ -3,7 +3,6 @@
 @section('content')
 
 <!-- Start Breadcrumb -->
-<div class="ak-height-150 ak-height-lg-120"></div>
 <div class="breadcrumb-area style-2">
   <div class="container">
     <div class="breadcrumb-wapper style-2">
@@ -33,13 +32,16 @@
   <div class="portfolio-wrapper">
     <div class="row justify-content-between align-items-center g-5 overflow-hidden">
       @foreach($projects as $project)
-      @if($project->isLandscape())
-      <!-- عرض المشاريع ذات الصور الأفقية (لاندسكيب) -->
-      <div class="col-md-12 mb-4">
-        <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card overflow-hidden d-block">
+      <!-- Debug: عرض قيمة slider_type -->
+      <!-- <div>Debug: Project ID {{ $project->id }} - slider_type: {{ $project->slider_type }} - isPortrait: {{ $project->isPortrait() ? 'true' : 'false' }} - isLandscape: {{ $project->isLandscape() ? 'true' : 'false' }}</div> -->
+
+      @if($project->isPortrait())
+      <!-- Mobile Apps - Portrait (عمودي) - ارتفاع طويل -->
+      <div class="col-md-6 mb-4">
+        <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card overflow-hidden d-block h-100">
           <div class="portfolio-top-img img-anim-left-show">
             <img src="{{ asset($project->image) }}" alt="{{ $project->title }}" class="w-100"
-              style="height: 400px; object-fit: cover;" />
+              style="height: 600px; object-fit: cover; object-position: top;" />
           </div>
           <div class="portfolio-content">
             <h6 class="portfolio-title">
@@ -51,13 +53,13 @@
           </div>
         </a>
       </div>
-      @elseif($project->isPortrait())
-      <!-- عرض المشاريع ذات الصور العمودية (بورتريه) -->
+      @elseif($project->isLandscape())
+      <!-- Websites/Systems - Landscape (أفقي) - ارتفاع قصير -->
       <div class="col-md-6 mb-4">
-        <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card overflow-hidden d-block">
-          <div class="portfolio-top-img img-anim-left-show">
+        <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card overflow-hidden d-block h-100">
+          <div class="portfolio-top-img img-anim-right-show">
             <img src="{{ asset($project->image) }}" alt="{{ $project->title }}" class="w-100"
-              style="height: 500px; object-fit: cover;" />
+              style="height: 350px; object-fit: cover;" />
           </div>
           <div class="portfolio-content">
             <h6 class="portfolio-title">
@@ -70,12 +72,12 @@
         </a>
       </div>
       @else
-      <!-- عرض افتراضي للمشاريع التي ليس لها نوع محدد -->
-      <div class="col-md-{{ $loop->iteration % 3 == 0 ? '12' : ($loop->iteration % 2 == 0 ? '7' : '5') }} mb-4">
-        <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card overflow-hidden d-block">
+      <!-- Fallback للمشاريع اللي ملهاش slider_type -->
+      <div class="col-md-6 mb-4">
+        <a href="{{ route('projectfront.show', $project->id) }}" class="portfolio-card overflow-hidden d-block h-100">
           <div class="portfolio-top-img img-anim-left-show">
             <img src="{{ asset($project->image) }}" alt="{{ $project->title }}" class="w-100"
-              style="height: 350px; object-fit: cover;" />
+              style="height: 400px; object-fit: cover;" />
           </div>
           <div class="portfolio-content">
             <h6 class="portfolio-title">

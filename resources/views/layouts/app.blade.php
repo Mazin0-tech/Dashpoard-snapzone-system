@@ -41,7 +41,7 @@
                             <stop offset="100%" stop-color="#000" />
                         </linearGradient>
                     </defs>
-                    <text class="svg-text" id="svgText">cretio</text>
+                    <text class="svg-text" id="svgText">{{ $settings->site_name }}</text>
                 </svg>
             </div>
             <div class="loading-percent">0%</div>
@@ -105,7 +105,7 @@
                         <div class="ak-space-between gap-3">
                             <div class="btn-wrapper">
                                 <div class="button-container">
-                                    <a href="contact.html" class="custom-button ak-center">
+                                    <a href="{{ route('contactfront.index') }}" class="custom-button ak-center">
                                         <svg width="180px" height="50px" viewBox="0 0 180 50">
                                             <rect x="0" y="0" width="180" height="50" rx="30" ry="30" class="bg-line" />
                                             <rect x="0" y="0" width="180" height="50" rx="30" ry="30" class="hl-line" />
@@ -135,61 +135,123 @@
         <div class="offcanvas-body">
             <div class="offcanvas-body-coustom-style">
                 <div class="offcanvas-logo-content">
-                    <a class="ak-site_branding dark-logo" href="index.html">
-                        <img src="{{ asset('front/img/logo/dark-logo.svg') }}" alt="..." />
+                    <a class="ak-site_branding dark-logo" href="{{ url('/') }}">
+                        @if($settings->dark_logo)
+                        <img src="{{ asset($settings->dark_logo) }}" alt="{{ $settings->site_name }}" />
+                        @else
+                        <img src="{{ asset('front/img/logo/dark-logo.svg') }}" alt="{{ $settings->site_name }}" />
+                        @endif
                     </a>
-                    <a class="ak-site_branding white-logo" href="index.html">
-                        <img src="{{ asset('front/img/logo/white-logo.svg') }}" alt="..." />
+                    <a class="ak-site_branding white-logo" href="{{ url('/') }}">
+                        @if($settings->logo)
+                        <img src="{{ asset($settings->logo) }}" alt="{{ $settings->site_name }}" />
+                        @else
+                        <img src="{{ asset('front/img/logo/white-logo.svg') }}" alt="{{ $settings->site_name }}" />
+                        @endif
                     </a>
                 </div>
+        
+                @if($settings->meta)
                 <p class="desp">
-                    We thrive on creativity and innovation. Our team is constantly
-                    exploring new.
+                    {{ $settings->meta }}
                 </p>
+                @endif
+        
                 <div class="row row-cols-3 g-3">
                     <div class="col">
-                        <img src="{{ asset('front/img/gallery/mini-gallery-1.png') }}" class="img-fluid" alt="..." />
+                        <img src="{{ asset('front/img/gallery/mini-gallery-1.png') }}" class="img-fluid"
+                            alt="{{ $settings->site_name }}" />
                     </div>
                     <div class="col">
-                        <img src="{{ asset('front/img/gallery/mini-gallery-2.png') }}" class="img-fluid" alt="..." />
+                        <img src="{{ asset('front/img/gallery/mini-gallery-2.png') }}" class="img-fluid"
+                            alt="{{ $settings->site_name }}" />
                     </div>
                     <div class="col">
-                        <img src="{{ asset('front/img/gallery/mini-gallery-3.png') }}" class="img-fluid" alt="..." />
+                        <img src="{{ asset('front/img/gallery/mini-gallery-3.png') }}" class="img-fluid"
+                            alt="{{ $settings->site_name }}" />
                     </div>
                     <div class="col">
-                        <img src="{{ asset('front/img/gallery/mini-gallery-4.png') }}" class="img-fluid" alt="..." />
+                        <img src="{{ asset('front/img/gallery/mini-gallery-4.png') }}" class="img-fluid"
+                            alt="{{ $settings->site_name }}" />
                     </div>
                     <div class="col">
-                        <img src="{{ asset('front/img/gallery/mini-gallery-5.png') }}" class="img-fluid" alt="..." />
+                        <img src="{{ asset('front/img/gallery/mini-gallery-5.png') }}" class="img-fluid"
+                            alt="{{ $settings->site_name }}" />
                     </div>
                     <div class="col">
-                        <img src="{{ asset('front/img/gallery/mini-gallery-6.png') }}" class="img-fluid" alt="..." />
+                        <img src="{{ asset('front/img/gallery/mini-gallery-6.png') }}" class="img-fluid"
+                            alt="{{ $settings->site_name }}" />
                     </div>
                 </div>
+        
                 <div class="offcanvas-footer-contant">
                     <p class="short-title">Say hello!</p>
-                    <a class="email" href="emailto:info@email.com"> info@email.com </a>
-                    <a class="email" href="telto:(406)555-0120">(406) 555-0120</a>
-                    <a href="#">
-                        901 N Pitt Str., Suite 170 <br />
-                        Alexandria, USA
+        
+                    @if($settings->email)
+                    <a class="email" href="mailto:{{ $settings->email }}">
+                        {{ $settings->email }}
                     </a>
+                    @endif
+        
+                    @if($settings->phone)
+                    <a class="email" href="tel:{{ $settings->phone }}">
+                        {{ $settings->phone }}
+                    </a>
+                    @endif
+        
+                    @if($settings->address)
+                    <a href="#">
+                        {{ nl2br($settings->address) }}
+                    </a>
+                    @endif
+        
                     <div class="ak-height-25 ak-height-lg-25"></div>
+        
                     <p class="short-title">Social:</p>
                     <div class="social-icon">
-                        <a href="#" class="icon style-2 dark-mode">
+                        @if($settings->facebook)
+                        <a href="{{ $settings->facebook }}" class="icon style-2 dark-mode" target="_blank">
                             <i class="flaticon-facebook"></i>
                         </a>
-                        <a href="#" class="icon style-2 dark-mode">
-                            <i class="flaticon-video"></i>
+                        @endif
+        
+                        @if($settings->youtube)
+                        <a href="{{ $settings->youtube }}" class="icon style-2 dark-mode" target="_blank">
+                            <i class="fab fa-youtube"></i>
                         </a>
-                        <a href="#" class="icon style-2 dark-mode">
+                        @endif
+        
+                        @if($settings->linkedin)
+                        <a href="{{ $settings->linkedin }}" class="icon style-2 dark-mode" target="_blank">
                             <i class="flaticon-linkedin"></i>
                         </a>
-                        <a href="#" class="icon style-2 dark-mode">
+                        @endif
+        
+                        @if($settings->twitter)
+                        <a href="{{ $settings->twitter }}" class="icon style-2 dark-mode" target="_blank">
                             <i class="flaticon-twitter"></i>
                         </a>
+                        @endif
+        
+                        @if($settings->instagram)
+                        <a href="{{ $settings->instagram }}" class="icon style-2 dark-mode" target="_blank">
+                            <i class="flaticon-instagram"></i>
+                        </a>
+                        @endif
+        
+                        @if($settings->snapchat)
+                        <a href="{{ $settings->snapchat }}" class="icon style-2 dark-mode" target="_blank">
+                           <i class="fab fa-snapchat-ghost"></i>
+                        </a>
+                        @endif
+        
+                        @if($settings->tiktok)
+                        <a href="{{ $settings->tiktok }}" class="icon style-2 dark-mode" target="_blank">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        @endif
                     </div>
+        
                     <div class="ak-height-40 ak-height-lg-40"></div>
                 </div>
             </div>

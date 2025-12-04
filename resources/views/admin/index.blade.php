@@ -329,7 +329,9 @@
                                     </div>
                                     <div class="flex-grow-1">
                                         <h6 class="mb-0 fw-semibold">{{ Str::limit($blog->title, 30) }}</h6>
-                                        <small class="text-muted">{{ Str::limit($blog->short_description, 50) }}</small>
+                                        <small class="text-muted">
+                                            {!! Str::limit(strip_tags($blog->short_description), 50) !!}
+                                        </small>
                                     </div>
                                     <div class="text-end">
                                         <small class="text-muted">{{ $blog->created_at->format('M d') }}</small>

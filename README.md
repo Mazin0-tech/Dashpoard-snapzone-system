@@ -75,3 +75,11 @@ Award Achievement  -->
 - title -->
 
 
+
+<!-- image in services index  -->
+
+ {{-- slider to show the projects related to this service --}}
+
+make the image to be link with the slider type (landscape | portairt [0,1]) in projects , service , home
+
+<!-- iframe 3d model in projects -->

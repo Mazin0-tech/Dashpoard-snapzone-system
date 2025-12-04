@@ -84,11 +84,85 @@
   .gallery-logs-button-next:hover svg path {
     fill: white;
   }
+
+  /* Matterport 3D Tour Styles */
+  .matterport-container {
+    width: 100%;
+    background: #f8f9fa;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+
+  .matterport-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .matterport-iframe-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    /* نسبة 16:9 */
+    height: 0;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .matterport-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .matterport-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10;
+  }
+
+  /* تحسينات للشاشات الصغيرة */
+  @media (max-width: 768px) {
+    .matterport-container {
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .matterport-iframe-container {
+      padding-bottom: 75%;
+      /* نسبة 4:3 للشاشات الصغيرة */
+    }
+  }
+
+  /* وضع Fullscreen */
+  .matterport-iframe:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+  }
+
+  .matterport-iframe:-moz-full-screen {
+    width: 100%;
+    height: 100%;
+  }
+
+  .matterport-iframe:-ms-fullscreen {
+    width: 100%;
+    height: 100%;
+  }
+
+  .matterport-iframe:fullscreen {
+    width: 100%;
+    height: 100%;
+  }
 </style>
 @endpush
 
 <!-- Start Breadcrumb -->
-<div class="ak-height-150 ak-height-lg-120"></div>
 <div class="breadcrumb-area style-2">
   <div class="container">
     <div class="breadcrumb-wapper style-2">
@@ -110,7 +184,7 @@
       </div>
     </div>
   </div>
-  <div class="breadcrumb-stroke">Project</div>
+  <div class="breadcrumb-stroke" style="margin-top: 110px">Project</div>
 </div>
 <!-- End Breadcrumb -->
 
@@ -159,7 +233,7 @@
 </div>
 
 <div class="ak-height-150 ak-height-lg-80"></div>
-<!-- نقل قسم المعرض خارج الـ container الرئيسي -->
+
 <div class="container-fluid px-0">
   <!-- Start Gallery Section -->
   <section>
@@ -222,12 +296,12 @@
     </div>
     <div class="mt-4 ak-slider ak-team-slider">
       <div class="swiper-wrapper row row-cols-1 row-cols-md-3 row-cols-lg-5 mx-auto flex-nowrap">
-        @foreach($project->galleries as $gallery)
+        @foreach($project->image)
         <div class="swiper-slide">
           <a href="#" class="border-0 team-card d-block h-100">
             <div class="team-img-top h-100">
-              <img src="{{ asset($gallery->image) }}" alt="{{ $project->title }}" class="w-100 h-100 object-fit-cover"
-                style="@if($project->isLandscape()) max-height: 400px; min-height: 300px; @else max-height: 500px; min-height: 400px; @endif" />
+              <img src="{{ $project->image }}" alt="{{ $project->title }}" class="w-100 h-100 object-fit-cover"
+                style="@if($project->isLandscape()) max-height: 400px; min-height: 300px; min-width: 500px; max-width: 700px; @else max-height: 500px; min-height: 400px; @endif" />
             </div>
           </a>
         </div>
@@ -239,7 +313,7 @@
 </div>
 
 <div class="container portfolio-details-container">
- 
+
   @if($project->link_project)
   <div class="project-link-box mt-4 text-center">
     <a href="{{ $project->link_project }}" target="_blank" class="btn btn-primary">
@@ -249,6 +323,64 @@
   </div>
   @endif
 
+  @if ($project->model_link)
+  <!-- Start Matterport 3D Tour Section -->
+  <div class="ak-height-150 ak-height-lg-80"></div>
+  <div class="container-fluid px-0">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <div class="ak-section-heading ak-style-1 mb-5">
+            <div class="ak-section-left">
+              <h2 class="ak-section-title text-animation" data-ease="power2.out" data-split-text="chars"
+                data-direction="textTop" data-duration="0.7" data-offset="100%">
+                Explore Our <span class="highlight">3D Virtual Tour</span>
+              </h2>
+            </div>
+            <div class="ak-section-right">
+              <p class="ak-section-desp text-animation" data-direction="rotationX" data-split-text="lines"
+                data-delay="0.3">
+                Immerse yourself in a virtual experience of the {{ $project->title }} project with our interactive 3D
+                tour.
+              </p>
+              <div class="ak-section-caption fade-animation" data-direction="right" data-delay="0.3">
+                <span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="223" height="12" viewBox="0 0 223 12" fill="none">
+                    <path d="M1.33789 1.18359H221.034L209.173 10.9822" stroke="#FF4A23" stroke-linecap="round" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="pb-5">
+      <div class="matterport-container">
+        <div class="matterport-wrapper">
+          <!-- Matterport iframe مع نسبة أبعاد 16:9 -->
+          <div class="matterport-iframe-container">
+            <iframe src="{{ $project->model_link }}" title="{{ $project->title }} - 3D Virtual Tour" frameborder="0"
+              allow="fullscreen; accelerometer; gyroscope; magnetometer; vr; xr-spatial-tracking" allowfullscreen
+              loading="lazy" class="matterport-iframe">
+            </iframe>
+          </div>
+
+          <!-- عنصر تحكم للنسبة إذا لزم الأمر -->
+          <div class="matterport-controls d-none">
+            <button class="btn btn-outline-primary btn-sm" onclick="enterFullscreen()">
+              <i class="fas fa-expand me-2"></i>Full Screen
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <!-- End Matterport 3D Tour Section -->
+  @else
+  <div class="ak-height-150 ak-height-lg-80"></div>
+  @endif
 
   <!-- FAQs Section -->
   @if($project->service && $project->service->faqs->where('is_active', true)->count() > 0)
@@ -293,7 +425,7 @@
 <!-- End Portfolio Details Container -->
 
 <!-- Start Portfolio Details Cta-->
-<div class="ak-height-150 ak-height-lg-80"></div>
+
 <div class="container">
   <div class="services-details-cta">
     <div class="dot-top-left"></div>
@@ -366,6 +498,34 @@
             }
         });
     });
+
+    function enterFullscreen() {
+    const iframe = document.querySelector('.matterport-iframe');
+    if (iframe.requestFullscreen) {
+    iframe.requestFullscreen();
+    } else if (iframe.mozRequestFullScreen) { // Firefox
+    iframe.mozRequestFullScreen();
+    } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari and Opera
+    iframe.webkitRequestFullscreen();
+    } else if (iframe.msRequestFullscreen) { // IE/Edge
+    iframe.msRequestFullscreen();
+    }
+    }
+    
+    // كشف تغيير وضع Fullscreen
+    document.addEventListener('fullscreenchange', exitHandler);
+    document.addEventListener('webkitfullscreenchange', exitHandler);
+    document.addEventListener('mozfullscreenchange', exitHandler);
+    document.addEventListener('MSFullscreenChange', exitHandler);
+    
+    function exitHandler() {
+    if (!document.fullscreenElement &&
+    !document.webkitIsFullScreen &&
+    !document.mozFullScreen &&
+    !document.msFullscreenElement) {
+
+    }
+    }
 
     // باقي الكود الخاص بالسلايدر...
     if (document.querySelector('.ak-gallery-slider')) {

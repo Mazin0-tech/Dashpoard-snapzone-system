@@ -41,6 +41,7 @@
         padding: 2px 5px;
         border-radius: 3px;
         font-size: 10px;
+        z-index: 2;
     }
 
     .existing-gallery {
@@ -57,10 +58,22 @@
         border: 2px solid #ddd;
         border-radius: 5px;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .existing-gallery-item.featured {
         border-color: #28a745;
+    }
+
+    .existing-gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .existing-gallery-item:hover img {
+        transform: scale(1.05);
     }
 
     .delete-gallery-btn {
@@ -75,6 +88,25 @@
         height: 20px;
         font-size: 12px;
         cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .gallery-preview-item,
+    .existing-gallery-item {
+        background-color: #f8f9fa;
+    }
+
+    .gallery-preview-item img,
+    .existing-gallery-item img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        background-color: white;
     }
 </style>
 @endpush
@@ -196,6 +228,16 @@
                                 @enderror
                             </div>
 
+                            <div class="mb-3">
+                                <label for="model_link" class="form-label">3D Model Link </label>
+                                <input type="text" class="form-control @error('model_link') is-invalid @enderror"
+                                    id="model_link" name="model_link"
+                                    value="{{ old('model_link', $project->model_3d) }}">
+                                @error('model_link')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="image" class="form-label">Main Image</label>
@@ -247,10 +289,11 @@
                                         @if($gallery->is_featured)
                                         <span class="featured-badge">Featured</span>
                                         @endif
-                                        <button type="button" class="delete-gallery-btn"
-                                            onclick="deleteGalleryImage({{ $gallery->id }})" title="Delete Image">
+                                        <!-- زر الحذف كـ link عادي -->
+                                        <a href="{{ route('project.deleteGallery', $gallery->id) }}"
+                                            class="delete-gallery-btn" onclick="return confirmDelete(event, this)">
                                             ×
-                                        </button>
+                                        </a>
                                     </div>
                                     @endforeach
                                 </div>
@@ -297,127 +340,106 @@
 <!-- jQuery and Bootstrap JS via CDN -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Summernote JS via CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.js"></script>
 
 <script>
     $(document).ready(function () {
-                    // Initialize Summernote
-                    $('#summernote').summernote({
-                        height: 200,
-                        toolbar: [
-                            ['style', ['style']],
-                            ['font', ['bold', 'italic', 'underline', 'clear']],
-                            ['fontname', ['fontname']],
-                            ['color', ['color']],
-                            ['para', ['ul', 'ol', 'paragraph']],
-                            ['table', ['table']],
-                            ['insert', ['link', 'picture', 'video']],
-                            ['view', ['fullscreen', 'codeview', 'help']]
-                        ]
-                    });
+    // Initialize Summernote فقط
+    $('#summernote').summernote({
+        height: 200,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ]
+    });
 
-                    // Handle new gallery image selection and featured image
-                    $('#gallery').on('change', function(e) {
-                        const files = e.target.files;
-                        const preview = $('#galleryPreview');
-                        const featuredSelection = $('#featuredSelection');
+    // Handle new gallery image selection and featured image
+    $('#gallery').on('change', function(e) {
+        const files = e.target.files;
+        const preview = $('#galleryPreview');
+        const featuredSelection = $('#featuredSelection');
 
-                        preview.empty();
+        preview.empty();
 
-                        if (files.length > 0) {
-                            featuredSelection.show();
+        if (files.length > 0) {
+            featuredSelection.show();
 
-                            Array.from(files).forEach((file, index) => {
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    const isFeatured = index === 0 ? 'selected' : '';
-                                    const badge = index === 0 ? '<span class="featured-badge">Featured</span>' : '';
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const isFeatured = index === 0 ? 'selected' : '';
+                    const badge = index === 0 ? '<span class="featured-badge">Featured</span>' : '';
 
-                                    preview.append(`
-                                        <div class="gallery-preview-item ${isFeatured}" data-index="${index}">
-                                            <img src="${e.target.result}" alt="Preview">
-                                            ${badge}
-                                        </div>
-                                    `);
-                                };
-                                reader.readAsDataURL(file);
-                            });
+                    preview.append(`
+                        <div class="gallery-preview-item ${isFeatured}" data-index="${index}">
+                            <img src="${e.target.result}" alt="Preview">
+                            ${badge}
+                        </div>
+                    `);
+                };
+                reader.readAsDataURL(file);
+            });
 
-                            // Set first image as featured by default
-                            $('#featuredImageIndex').val(0);
-                        } else {
-                            featuredSelection.hide();
-                        }
-                    });
+            // Set first image as featured by default
+            $('#featuredImageIndex').val(0);
+        } else {
+            featuredSelection.hide();
+        }
+    });
 
-                    // Handle featured image selection for new images
-                    $(document).on('click', '.gallery-preview-item', function() {
-                        const index = $(this).data('index');
-                        $('.gallery-preview-item').removeClass('selected').find('.featured-badge').remove();
-                        $(this).addClass('selected').append('<span class="featured-badge">Featured</span>');
-                        $('#featuredImageIndex').val(index);
-                    });
+    // Handle featured image selection for new images
+    $(document).on('click', '.gallery-preview-item', function() {
+        const index = $(this).data('index');
+        $('.gallery-preview-item').removeClass('selected').find('.featured-badge').remove();
+        $(this).addClass('selected').append('<span class="featured-badge">Featured</span>');
+        $('#featuredImageIndex').val(index);
+    });
 
-                    // Handle featured image selection for existing images
-                    $(document).on('click', '.existing-gallery-item', function() {
-                        const galleryId = $(this).data('id');
-                        setFeaturedImage(galleryId);
-                    });
+    // Handle featured image selection for existing images (بدون SweetAlert)
+    $(document).on('click', '.existing-gallery-item', function(e) {
+        // منع الحذف عند الضغط على الصورة نفسها
+        if ($(e.target).closest('.delete-gallery-btn').length > 0 || 
+            $(e.target).hasClass('delete-gallery-btn')) {
+            return;
+        }
 
-                    // Form validation
-                    $('#projectForm').on('submit', function() {
-                        const title = $('#title').val();
-                        const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
+        // الذهاب مباشرة لرابط تحديد الصورة الرئيسية
+        const galleryId = $(this).data('id');
+        window.location.href = "{{ route('project.toggleFeatured', ':id') }}".replace(':id', galleryId);
+    });
 
-                        if (!title || !description) {
-                            alert('Please fill in all required fields');
-                            return false;
-                        }
-                        return true;
-                    });
-                });
+    // Form validation فقط
+    $('#projectForm').on('submit', function(e) {
+        const title = $('#title').val();
+        const description = $('#summernote').summernote('code').replace(/<(.|\n)*?>/g, '').trim();
 
-                // Set featured image for existing gallery
-                function setFeaturedImage(galleryId) {
-                    if (confirm('Set this image as featured?')) {
-                        $.ajax({
-                            url: '{{ route("project.toggleFeatured", "") }}/' + galleryId,
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                _method: 'PUT'
-                            },
-                            success: function(response) {
-                                location.reload();
-                            },
-                            error: function(xhr) {
-                                alert('Error setting featured image');
-                            }
-                        });
-                    }
-                }
+        if (!title || !description) {
+            alert('Please fill in all required fields');
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    });
+});
 
-                // Delete gallery image
-                function deleteGalleryImage(galleryId) {
-                    if (confirm('Are you sure you want to delete this image?')) {
-                        $.ajax({
-                            url: '{{ route("project.deleteGallery", "") }}/' + galleryId,
-                            type: 'POST',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                                _method: 'DELETE'
-                            },
-                            success: function(response) {
-                                location.reload();
-                            },
-                            error: function(xhr) {
-                                alert('Error deleting image');
-                            }
-                        });
-                    }
-                }
+// دالة تأكيد الحذف البسيطة
+function confirmDelete(event, element) {
+    event.stopPropagation();
+    event.preventDefault();
+    
+    if (confirm('Are you sure you want to delete this image?')) {
+        window.location = element.href;
+    }
+    return false;
+}
 </script>
 @endpush
 

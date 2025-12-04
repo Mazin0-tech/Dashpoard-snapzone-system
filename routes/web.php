@@ -46,6 +46,10 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::resource('service', ServiceController::class);
     Route::resource('project', ProjectController::class);
+       Route::get('project/gallery/{id}/delete', [ProjectController::class, 'deleteGallery'])
+        ->name('project.deleteGallery');
+    Route::get('project/gallery/{id}/featured', [ProjectController::class, 'toggleFeatured'])
+        ->name('project.toggleFeatured');
     Route::resource('blog', BlogController::class);
     Route::resource('contact', ContactController::class);
     Route::resource('settings', SettingController::class);
@@ -53,4 +57,5 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::resource('partners', PartnerController::class);
     Route::resource('faq', FAQController::class);
     Route::post('faq/{faq}/toggle-status', [FAQController::class, 'toggleStatus'])->name('faq.toggle-status');
+    
 });

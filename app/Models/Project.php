@@ -18,7 +18,8 @@ class Project extends Model
         'service_id',
         'client',
         'link_project',
-        'slider_type'
+        'slider_type',
+        'model_link'
     ];
 
     protected $casts = [
@@ -36,13 +37,13 @@ class Project extends Model
         return $this->hasMany(Gallery::class);
     }
 
-    public function isLandscape()
-    {
-        return $this->slider_type === 0;
-    }
+public function isPortrait()
+{
+    return $this->slider_type == 1 || $this->slider_type === '1';
+}
 
-    public function isPortrait()
-    {
-        return $this->slider_type === 1;
-    }
+public function isLandscape()
+{
+    return $this->slider_type == 0 || $this->slider_type === '0';
+}
 }

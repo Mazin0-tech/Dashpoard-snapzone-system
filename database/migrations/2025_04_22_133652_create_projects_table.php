@@ -12,23 +12,19 @@ return new class extends Migration {
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            //==============================================
+            $table->unsignedBigInteger('service_id');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+            //==============================================
             $table->string('title');
             $table->longText('description');
             $table->string('image')->default('https://static.thenounproject.com/png/1077596-200.png');
             $table->string('industry');
             $table->date('date');
-
-            //==============================================
-            $table->unsignedBigInteger('service_id');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
-            //==============================================
-
             $table->string('client')->nullable();
             $table->string('link_project')->nullable();
-
-            // الحقل الجديد
-            $table->boolean('slider_type')->default(0); // 0=landscape, 1=portrait
-
+            $table->boolean('slider_type')->default(0);
+            $table->text('model_link')->nullable();
             $table->timestamps();
         });
     }

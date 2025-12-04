@@ -188,22 +188,22 @@
 
                     // Initialize Summernote for short description
                     $('#shortDescriptionEditor').summernote({
-                        height: 150,
-                        toolbar: [
+                       height: 200,
+                            toolbar: [
                             ['style', ['style']],
                             ['font', ['bold', 'italic', 'underline', 'clear']],
+                            ['fontname', ['fontname']],
+                            ['color', ['color']],
                             ['para', ['ul', 'ol', 'paragraph']],
-                            ['view', ['fullscreen', 'codeview']]
-                        ],
+                            ['table', ['table']],
+                            ['insert', ['link', 'picture', 'video']],
+                            ['view', ['fullscreen', 'codeview', 'help']]
+                            ],
                         callbacks: {
-                            onChange: function(contents) {
-                                // Limit short description to 500 characters
-                                var plainText = $(contents).text();
-                                if (plainText.length > 500) {
-                                    $('#shortDescriptionEditor').summernote('code', contents.substring(0, 500));
-                                    alert('Short description cannot exceed 500 characters');
+                          onInit: function() {
+                                // Set required attribute for the hidden textarea
+                                $('#shortDescriptionEditor').attr('required', 'required');
                                 }
-                            }
                         }
                     });
 

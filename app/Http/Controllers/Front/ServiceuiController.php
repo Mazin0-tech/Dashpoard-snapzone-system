@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use App\Models\Service;
 use Illuminate\Http\Request;
 
@@ -38,8 +39,9 @@ class ServiceuiController extends Controller
      */
     public function show(string $id)
     {
+        $projects = Project::where('service_id', $id)->get();
         $service = Service::with('faqs')->findOrFail($id);
-        return view('front.service.show', compact('service'));
+        return view('front.service.show', compact('service', 'projects'));
     }
 
     /**

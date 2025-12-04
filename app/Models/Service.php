@@ -16,6 +16,7 @@ class Service extends Model
         'start_date',
         'end_date',
         'image',
+        'small_image',
         'industry'
     ];
 

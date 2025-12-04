@@ -3,7 +3,6 @@
 @section('content')
 
 <!-- Start Breadcrumb -->
-<div class="ak-height-150 ak-height-lg-120"></div>
 <div class="breadcrumb-area style-2">
   <div class="container">
     <div class="breadcrumb-wapper style-2">
@@ -32,7 +31,7 @@
 <div class="ak-height-150 ak-height-lg-80"></div>
 <div class="portfolio-main-img ak-center ak-parallax">
   @if($blog->image)
-    <img src="{{ asset( $blog->image) }}" class="td-main-img" alt="{{ $blog->title }}" />
+  <img src="{{ asset( $blog->image) }}" class="td-main-img" alt="{{ $blog->title }}" />
   @else
   <img src="assets/img/team/td-main-img.png" class="td-main-img" alt="{{ $blog->title }}" />
   @endif
@@ -52,7 +51,7 @@
     </p>
     <div class="ak-height-50 ak-height-lg-50"></div>
     <p class="blogs-details-desp-text">
-      {!! $blog->description !!}  
+      {!! $blog->description !!}
     </p>
     <div class="ak-height-100 ak-height-lg-50"></div>
   </div>
